@@ -47,7 +47,6 @@ namespace GameCore.Core.Services.Resources
                 }).StartAsCoroutine();
             
         }
-        
 
         public void StopLoading()
         {
@@ -57,8 +56,6 @@ namespace GameCore.Core.Services.Resources
                 _coroutine = null;
             }
         }
-
-      
 
         public void Dispose()
         {
@@ -71,7 +68,6 @@ namespace GameCore.Core.Services.Resources
 
         protected abstract IEnumerator LoadResource(Action<TAsset> onLoadComplete);
         protected abstract void OnDisposed();
-
 
         public IAwaiter<TAsset> GetAwaiter()
         {

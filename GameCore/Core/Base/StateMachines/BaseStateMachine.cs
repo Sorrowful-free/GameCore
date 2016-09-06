@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using GameCore.Core.Extentions;
 
 namespace GameCore.Core.Base.StateMachines
 {
-    public class BaseStateMachine<TState> where TState:class ,IState,new()
+    public class BaseStateMachine<TState> where TState:class ,IState, new()
     {
         public TState CurrentState { get; private set; }
         public Type CurrentStateType
@@ -20,22 +21,19 @@ namespace GameCore.Core.Base.StateMachines
         private Stack<Type> _statesStack = new Stack<Type>();
         private Stack<object[]> _stateParamsStack = new Stack<object[]>();
 
-        public void PushState<TCurrentState>(params object[] paramsForEnter) where TCurrentState : TState
+        public async Task PushState<TCurrentState>(params object[] paramsForEnter) where TCurrentState : TState
         {
             var typeOfState = typeof(TCurrentState);
             _statesStack.Push(typeOfState);
             _stateParamsStack.Push(paramsForEnter);
-            return SetState<TCurrentState>(paramsForEnter);
+            await SetState<TCurrentState>(paramsForEnter);
         }
 
-        public void PopState()
+        public async Task PopState()
         {
-            var lastIndex = _statesStack.Count - 1;
-            var typeOfState = _statesStack[lastIndex];
-            _statesStack.RemoveAt(lastIndex);
-            var stateParams = _stateParamsStack[lastIndex];
-            _stateParamsStack.RemoveAt(lastIndex);
-            return SetState(typeOfState, stateParams);
+            var typeOfState = _statesStack.Pop();
+            var stateParams = _stateParamsStack.Pop();
+            await SetState(typeOfState, stateParams);
         }
 
         public void ClearStateStack()
@@ -44,32 +42,21 @@ namespace GameCore.Core.Base.StateMachines
             _stateParamsStack.Clear();
         }
 
-        public void SetState<TCurrentState>(params object[] enterParams) where TCurrentState:TState
+        public async Task SetState<TCurrentState>(params object[] enterParams) where TCurrentState:TState
         {
-           return SetState(typeof (TCurrentState), enterParams);
+            await SetState(typeof (TCurrentState), enterParams);
         }
         
-        public void SetState(Type stateType, params object[] enterParams)
+        public async Task SetState(Type stateType, params object[] enterParams)
         {
-           return InstanceFactory.CreateInstance(stateType)
-                .ContinueWith(createInstanceTask => (callback =>
-                {
-                   
-                }) );
-            
-        }
-
-        protected virtual void OnSetState(TState state, Action callback, params object[] enterParams)
-        {
-            var newState = state;
             if (CurrentState != null)
             {
                 CurrentState.ExitState();
-                InstanceFactory.DestroyInstance(CurrentState);
+                CurrentState.Unload(); // специально не дожидаюсь выгрузки
             }
-            CurrentState = newState;
-            CurrentState.EnterState(enterParams);
-            callback.SafeInvoke();
+            var state = await Task<TState>.Factory.StartNew( ()=> (TState) Activator.CreateInstance(stateType) );
+            await state.Preload();
+            state.EnterState(enterParams);
         }
     }
 }

@@ -76,37 +76,37 @@ namespace GameCore.Core.Services.Resources
             return directoriPath + Path.DirectorySeparatorChar;
         }
 
-        public string GetResourcePath(int id)
-        {
-            var res = default(AssetInfo);
-            if (_assets.TryGetValue(id, out res))
-            {
-                return GetDirectoryPath(res.DirectoryId) + res.Name;
-            }
-            return "";
-        }
-
-        public string GetResourceAssetPath(int id)
-        {
-            var res = default(AssetInfo);
-            if (_assets.TryGetValue(id, out res))
-            {
-                return GetAssetPath(res.BundleId);
-            }
-            return "";
-        }
-
         public string GetAssetPath(int id)
         {
-            var asset = default(BundleInfo);
-            if (_bundles.TryGetValue(id, out asset))
+            var asset = default(AssetInfo);
+            if (_assets.TryGetValue(id, out asset))
             {
-                return GetDirectoryPath(asset.DirectoryId)  + asset.Name;
+                return GetDirectoryPath(asset.DirectoryId) + asset.Name;
             }
             return "";
         }
 
-        public AssetInfo GetResourceInfo(int id)
+        public string GetAssetBundlePathByAssetId(int id)
+        {
+            var asset = default(AssetInfo);
+            if (_assets.TryGetValue(id, out asset))
+            {
+                return GetAssetBundlePath(asset.BundleId);
+            }
+            return "";
+        }
+
+        public string GetAssetBundlePath(int id)
+        {
+            var bundle = default(BundleInfo);
+            if (_bundles.TryGetValue(id, out bundle))
+            {
+                return GetDirectoryPath(bundle.DirectoryId)  + bundle.Name;
+            }
+            return "";
+        }
+
+        public AssetInfo GetAssetInfo(int id)
         {
             var resInfo = default(AssetInfo);
             if (_assets.TryGetValue(id, out resInfo))
@@ -117,7 +117,7 @@ namespace GameCore.Core.Services.Resources
 
         }
 
-        public BundleInfo GetBundleInfo(int id)
+        public BundleInfo GetAssetBundleInfo(int id)
         {
             var bundleInfo = default(BundleInfo);
             if (_bundles.TryGetValue(id, out bundleInfo))
@@ -128,7 +128,8 @@ namespace GameCore.Core.Services.Resources
         }
     }
 
-    public struct ResourcesInfo
+    //TODO add serialization
+    public struct ResourcesInfo 
     {
         public List<DirectoryInfo> ResourceDirectories;
         public List<AssetInfo> Resources;

@@ -1,7 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using GameCore.Core.Extentions;
 using GameCore.Core.Services.Resources.Assets;
 using GameCore.Core.Services.Resources.Bundles;
+using GameCore.Core.UnityThreading;
 using UnityEngine;
+using AssetBundleResource = GameCore.Core.Services.Resources.Bundles.AssetBundleResource;
+using Object = UnityEngine.Object;
 
 namespace GameCore.Core.Services.Resources
 {
@@ -10,6 +19,9 @@ namespace GameCore.Core.Services.Resources
         
         private Dictionary<int, IBaseResource<AssetInfo>> _assets = new Dictionary<int, IBaseResource<AssetInfo>>();
         private Dictionary<int, IResource<BundleInfo, AssetBundle>> _bundles = new Dictionary<int, IResource<BundleInfo, AssetBundle>>();
+
+        public ReadOnlyCollection<int> AssetsIds { get { return new ReadOnlyCollection<int>(_assets.Keys.ToList());} }
+        public ReadOnlyCollection<int> BundlesIds { get { return new ReadOnlyCollection<int>(_bundles.Keys.ToList()); } }
 
         public ResourceTree ResourceTree { get; private set; }
 
@@ -23,13 +35,13 @@ namespace GameCore.Core.Services.Resources
             var resource = default(IBaseResource<AssetInfo>);
             if (!_assets.TryGetValue(id, out resource))
             {
-                var resInfo = ResourceTree.GetResourceInfo(id);
-                var resPath = ResourceTree.GetResourcePath(id);
+                var resInfo = ResourceTree.GetAssetInfo(id);
+                var resPath = ResourceTree.GetAssetPath(id);
                
                 if (resInfo.BundleId >= 0)
                 {
                     var assetBundle = GetBundle(resInfo.BundleId);
-                    resource = new BundleResource<TAsset>(resInfo, resPath, assetBundle);
+                    resource = new AssetBundleResource<TAsset>(resInfo, resPath, assetBundle);
                 }
                 else
                 {
@@ -45,16 +57,9 @@ namespace GameCore.Core.Services.Resources
             var bundle = default(IResource<BundleInfo, AssetBundle>);
             if (!_bundles.TryGetValue(id, out bundle))
             {
-                var bundleInfo = ResourceTree.GetBundleInfo(id);
-                var bundlePath = ResourceTree.GetAssetPath(id);
-                if (bundlePath.ToLower().StartsWith("resources://"))
-                {
-                    bundle = new LocalAssetBundleResource(bundleInfo, bundlePath);
-                }
-                else
-                {
-                    bundle = new WebAssetBundleResource(bundleInfo, bundlePath);
-                }
+                var bundleInfo = ResourceTree.GetAssetBundleInfo(id);
+                var bundlePath = ResourceTree.GetAssetBundlePath(id);
+                bundle = new AssetBundleResource(bundleInfo, bundlePath);
                 _bundles.Add(id,bundle);
             }
             return bundle;
@@ -87,6 +92,45 @@ namespace GameCore.Core.Services.Resources
         public void Dispose()
         {
             Clear();
+        }
+
+        public bool HasUpdates()
+        {
+            var hasUpdate = false;
+            foreach (var bundlesId in BundlesIds)
+            {
+                var path = ResourceTree.GetAssetBundlePath(bundlesId);
+                var bundleInfo = ResourceTree.GetAssetBundleInfo(bundlesId);
+                var needCheck = !path.ToLower().Replace("\\", "/").Contains("file://"); // если файл не локальный то надо проверить на апдейт
+                if (needCheck)
+                {
+                    hasUpdate = hasUpdate || !Caching.IsVersionCached(path, bundleInfo.Version);
+                }
+            }
+            return hasUpdate;
+        }
+
+        public async Task LoadAllAssetBundles(Action<float> onProgress)
+        {
+            var progress = 0.0f;
+            var ids = await Task<int[]>.Factory.StartNew(() => BundlesIds.Where( e => !ResourceTree.GetAssetBundlePath(e).ToLower().Replace("\\", "/").Contains("file://")).ToArray()
+#if UNITY_WEBGL
+            ,
+            CancellationToken.None,
+            TaskCreationOptions.None, 
+            UnityTaskScheduler.Instance
+#endif
+            );
+            var percentPerBundle = 1.0f/(float) ids.Length;
+            foreach (var bundlesId in ids)
+            {
+                await GetBundle(bundlesId);
+                progress += percentPerBundle;
+                onProgress.SafeInvoke(progress);
+            }
+#if !UNITY_WEBGL
+            await Task.Delay(100);
+#endif
         }
     }
 }

@@ -40,7 +40,8 @@ namespace GameCore.Core.UnityThreading
             _instance.StopAllCoroutines();
         }
 
-        public static void Initialize()
+        [RuntimeInitializeOnLoadMethod]
+        private static void Initialize()
         {
             MainThread = Thread.CurrentThread;
             var unityMainThread = FindObjectOfType<UnityMainThread>();

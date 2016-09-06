@@ -54,24 +54,20 @@
     <Compile Include="Core\Base\BaseMonoBehaviour.cs" />
     <Compile Include="Core\Extentions\ActionExtention.cs" />
     <Compile Include="Core\Extentions\FuncExtention.cs" />
-    <Compile Include="Core\Services\Resources\Bundles\BaseAssetBundleResource.cs" />
     <Compile Include="Core\Services\Resources\BaseResource.cs" />
-    <Compile Include="Core\Services\Resources\Assets\BundleResource.cs" />
-    <Compile Include="Core\Services\Resources\Bundles\LocalAssetBundleResource.cs" />
+    <Compile Include="Core\Services\Resources\Assets\AssetBundleResource.cs" />
+    <Compile Include="Core\Services\Resources\Bundles\AssetBundleResource.cs" />
     <Compile Include="Core\Services\Resources\Assets\LocalResource.cs" />
     <Compile Include="Core\Services\Resources\IResource.cs" />
     <Compile Include="Core\Services\Resources\ResourceAwaiter.cs" />
     <Compile Include="Core\Services\Resources\ResourceService.cs" />
     <Compile Include="Core\Services\Resources\ResourceTree.cs" />
-    <Compile Include="Core\Services\Resources\Bundles\WebAssetBundleResource.cs" />
     <Compile Include="Core\UnityThreading\UnityMainThread.cs" />
     <Compile Include="Core\UnityThreading\UnityMainThreadExtention.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestClass.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Core\Application\Extentions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) $(TargetPath)\..\..\..\..\Assets\Libraries\$(TargetName).dll</PostBuildEvent>
