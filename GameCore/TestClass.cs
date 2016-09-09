@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using GameCore.Core;
 using GameCore.Core.Base;
 using GameCore.Core.Services.Resources;
 using GameCore.Core.UnityThreading;
@@ -20,18 +21,19 @@ namespace GameCore
 
         public async Task Test()
         {
-            SynchronizationContext.SetSynchronizationContext(UnitySynchronizationContext.Unity);
-            await Task.Delay(2500);
+         //   UnitySynchronizationContext.MakeUnity();
+         //   await Task.Delay(2500);
             GetComponent<Text>().text = $"olololo {DateTime.Now}";
 
             //SynchronizationContext.SetSynchronizationContext(UnitySynchronizationContext.Default);
             await Task.Delay(2500);
             GetComponent<Text>().text = $"olololo {DateTime.Now}";
-
-            var rs = default(ResourceService);
-
-            SynchronizationContext.SetSynchronizationContext(UnitySynchronizationContext.Unity);
-            var mySprite = await rs.GetAsset<Sprite>(90);
+            
+            
+            
+            var test = await DependencyInjector.GetDependency<ITest>();
+            GetComponent<Text>().text = $"olololo {test.Lol} {nameof(test)}";
+        //    UnitySynchronizationContext.MakeDefault();
 
         }
 
@@ -40,5 +42,15 @@ namespace GameCore
             base.Update();
             transform.eulerAngles += Vector3.forward;
         }
+    }
+
+    public interface ITest
+    {
+        int Lol { get; }
+    }
+
+    public class MyTest :ITest
+    {
+        public int Lol { get { return 36; } }
     }
 }

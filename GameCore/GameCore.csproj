@@ -54,6 +54,7 @@
     <Compile Include="Core\Base\StateMachines\BaseEnterStateArguments.cs" />
     <Compile Include="Core\Base\StateMachines\BaseStateMachine.cs" />
     <Compile Include="Core\Base\StateMachines\IState.cs" />
+    <Compile Include="Core\Base\DependencyInjector.cs" />
     <Compile Include="Core\UnityThreading\UnitySynchronizationContext.cs" />
     <Compile Include="Core\UnityThreading\UnityTaskScheduler.cs" />
     <Compile Include="Core\Base\BaseMonoBehaviour.cs" />
