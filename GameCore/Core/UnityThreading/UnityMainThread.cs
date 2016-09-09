@@ -4,13 +4,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using GameCore.Core.Base;
+using UnityEditor;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace GameCore.Core.UnityThreading
 {
     public class UnityMainThread : BaseMonoBehaviour
     {
-        public const float MaxPercentOfFrameTime = 0.3f;
+        public const int MAX_TIME_FOR_EXECUTE_TIME = 50;
         public static Thread MainThread { get; private set; }
         private static Queue<Action> _queue = new Queue<Action>();
         private static UnityMainThread _instance;
@@ -52,18 +54,12 @@ namespace GameCore.Core.UnityThreading
         }
 
         private Stopwatch _stopwatch = new Stopwatch();
-        private int _maxTimeForQueue;
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            _maxTimeForQueue = (int)(1000/UnityEngine.Application.targetFrameRate * MaxPercentOfFrameTime);
-        }
         
         protected override void Update()
         {
             _stopwatch.Reset();
             _stopwatch.Start();
-            while (_queue.Count > 0 && _stopwatch.ElapsedMilliseconds< _maxTimeForQueue)
+            while (_queue.Count > 0 && _stopwatch.ElapsedMilliseconds < MAX_TIME_FOR_EXECUTE_TIME)
             {
                 var action = _queue.Dequeue();
                 try
@@ -76,7 +72,7 @@ namespace GameCore.Core.UnityThreading
                 }
                 catch (Exception e)
                 {
-                    //TODO loging
+                    Debug.LogException(e);
                 }
             }
             _stopwatch.Stop();

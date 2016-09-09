@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using GameCore.Core.Extentions;
 
 namespace GameCore.Core.Base.StateMachines
 {
@@ -19,14 +18,14 @@ namespace GameCore.Core.Base.StateMachines
         }
         
         private Stack<Type> _statesStack = new Stack<Type>();
-        private Stack<object[]> _stateParamsStack = new Stack<object[]>();
+        private Stack<BaseEnterStateArguments> _stateParamsStack = new Stack<BaseEnterStateArguments>();
 
-        public async Task PushState<TCurrentState>(params object[] paramsForEnter) where TCurrentState : TState
+        public async Task PushState<TCurrentState>(BaseEnterStateArguments arguments) where TCurrentState : TState
         {
             var typeOfState = typeof(TCurrentState);
             _statesStack.Push(typeOfState);
-            _stateParamsStack.Push(paramsForEnter);
-            await SetState<TCurrentState>(paramsForEnter);
+            _stateParamsStack.Push(arguments);
+            await SetState<TCurrentState>(arguments);
         }
 
         public async Task PopState()
@@ -42,21 +41,19 @@ namespace GameCore.Core.Base.StateMachines
             _stateParamsStack.Clear();
         }
 
-        public async Task SetState<TCurrentState>(params object[] enterParams) where TCurrentState:TState
+        public async Task SetState<TCurrentState>(BaseEnterStateArguments arguments) where TCurrentState:TState
         {
-            await SetState(typeof (TCurrentState), enterParams);
+            await SetState(typeof (TCurrentState), arguments);
         }
         
-        public async Task SetState(Type stateType, params object[] enterParams)
+        public async Task SetState(Type stateType, BaseEnterStateArguments arguments)
         {
             if (CurrentState != null)
             {
                 CurrentState.ExitState();
-                CurrentState.Unload(); // специально не дожидаюсь выгрузки
             }
             var state = await Task<TState>.Factory.StartNew( ()=> (TState) Activator.CreateInstance(stateType) );
-            await state.Preload();
-            state.EnterState(enterParams);
+           // state.EnterState(enterParams);
         }
     }
 }

@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;UNITY_WEBGL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -40,6 +40,9 @@
     <Reference Include="UnityEngine">
       <HintPath>D:\GameDev\Unity3d\Editor\Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>D:\GameDev\Unity3d\Editor\Data\UnityExtensions\Unity\GUISystem\UnityEngine.UI.dll</HintPath>
+    </Reference>
     <Reference Include="UnityMonoLib">
       <HintPath>..\Assets\Libraries\UnityMonoLib.dll</HintPath>
     </Reference>
@@ -48,8 +51,10 @@
     <Compile Include="Core\Application\GameApplication.Events.cs" />
     <Compile Include="Core\Application\GameApplication.MonoBehaviour.cs" />
     <Compile Include="Core\Application\GameApplication.StaticMethods.cs" />
+    <Compile Include="Core\Base\StateMachines\BaseEnterStateArguments.cs" />
     <Compile Include="Core\Base\StateMachines\BaseStateMachine.cs" />
     <Compile Include="Core\Base\StateMachines\IState.cs" />
+    <Compile Include="Core\UnityThreading\UnitySynchronizationContext.cs" />
     <Compile Include="Core\UnityThreading\UnityTaskScheduler.cs" />
     <Compile Include="Core\Base\BaseMonoBehaviour.cs" />
     <Compile Include="Core\Extentions\ActionExtention.cs" />
