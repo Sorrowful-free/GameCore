@@ -4,6 +4,19 @@ namespace GameCore.Core.Base
 {
     public class BaseMonoBehaviour: MonoBehaviour
     {
+        private Transform _transform;
+        public Transform Transfrom
+        {
+            get
+            {
+                if (_transform == null)
+                {
+                    _transform = transform;
+                }
+                return _transform;
+            }
+        }
+
         protected virtual void OnEnable()
         {
         }
