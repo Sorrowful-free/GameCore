@@ -4,56 +4,67 @@ using System.Threading.Tasks;
 
 namespace GameCore.Core.Base.StateMachines
 {
-    public class BaseStateMachine<TState> where TState:class ,IState, new()
+    public abstract class BaseStateMachine<TState> where TState : IBaseState
     {
-        public TState CurrentState { get; private set; }
-        public Type CurrentStateType
-        {
-            get
-            {
-                if (_statesStack.Count > 0)
-                    return _statesStack.Peek();
-                return null;
-            }
-        }
+        private BaseStateContainer _currentStateContainer;
+        private Stack<BaseStateContainer> _statesContainersStack = new Stack<BaseStateContainer>();
         
-        private Stack<Type> _statesStack = new Stack<Type>();
-        private Stack<BaseEnterStateArguments> _stateParamsStack = new Stack<BaseEnterStateArguments>();
-
-        public async Task PushState<TCurrentState>(BaseEnterStateArguments arguments) where TCurrentState : TState
+        public async Task PushState<TCurrentState>() where TCurrentState : TState, IState, new()
         {
-            var typeOfState = typeof(TCurrentState);
-            _statesStack.Push(typeOfState);
-            _stateParamsStack.Push(arguments);
-            await SetState<TCurrentState>(arguments);
+            var state = new StateContainer(new TCurrentState());
+            _statesContainersStack.Push(state);
+            await EnterToState(state);
+        }
+
+        public async Task PushState<TCurrentState, TStateArgs>(TStateArgs arguments)
+            where TCurrentState : TState, IState<TStateArgs>, new()
+            where TStateArgs : struct
+        {
+            var state = new StateContainer<TStateArgs>(new TCurrentState(), arguments);
+            _statesContainersStack.Push(state);
+            await EnterToState(state);
         }
 
         public async Task PopState()
         {
-            var typeOfState = _statesStack.Pop();
-            var stateParams = _stateParamsStack.Pop();
-            await SetState(typeOfState, stateParams);
+            await EnterToState(_statesContainersStack.Pop());
+        }
+
+        public async Task SetState<TCurrentState>() where TCurrentState : TState, IState, new()
+        {
+            ClearStateStack();
+            var state = new StateContainer(new TCurrentState());
+            await EnterToState(state);
+        }
+
+        public async Task SetState<TCurrentState, TStateArgs>(TStateArgs arguments)
+            where TCurrentState : TState, IState<TStateArgs>, new()
+            where TStateArgs : struct
+        {
+            ClearStateStack();
+            var state = new StateContainer<TStateArgs>(new TCurrentState(),arguments);
+            await EnterToState(state);
         }
 
         public void ClearStateStack()
         {
-            _statesStack.Clear();
-            _stateParamsStack.Clear();
+            _statesContainersStack.Clear();
         }
 
-        public async Task SetState<TCurrentState>(BaseEnterStateArguments arguments) where TCurrentState:TState
+        private async Task EnterToState(BaseStateContainer stateContainer)
         {
-            await SetState(typeof (TCurrentState), arguments);
-        }
-        
-        public async Task SetState(Type stateType, BaseEnterStateArguments arguments)
-        {
-            if (CurrentState != null)
+            if (_currentStateContainer != null)
             {
-                CurrentState.ExitState();
+                await _currentStateContainer.ExitState();
+                await OnAfterExitState((TState) _currentStateContainer.State);
             }
-            var state = await Task<TState>.Factory.StartNew( ()=> (TState) Activator.CreateInstance(stateType) );
-           // state.EnterState(enterParams);
+            _currentStateContainer = stateContainer;
+            await OnBeforeEnterState((TState)_currentStateContainer.State);
+            await _currentStateContainer.EnterState();
         }
+
+        protected abstract Task OnBeforeEnterState(TState state);
+
+        protected abstract Task OnAfterExitState(TState state);
     }
 }

@@ -52,10 +52,12 @@
     <Compile Include="Core\Application\GameApplication.MonoBehaviour.cs" />
     <Compile Include="Core\Application\GameApplication.StaticMethods.cs" />
     <Compile Include="Core\Base\Dependency\DependencyInjectionExtention.cs" />
-    <Compile Include="Core\Base\StateMachines\BaseEnterStateArguments.cs" />
     <Compile Include="Core\Base\StateMachines\BaseStateMachine.cs" />
     <Compile Include="Core\Base\StateMachines\IState.cs" />
     <Compile Include="Core\Base\Dependency\DependencyInjector.cs" />
+    <Compile Include="Core\Base\StateMachines\StateContainer.cs" />
+    <Compile Include="Core\Services\GameState\GameStateService.cs" />
+    <Compile Include="Core\Services\GameState\IGameState.cs" />
     <Compile Include="Core\Services\UI\UILayers.cs" />
     <Compile Include="Core\Services\UI\View\BaseUIBehaviour.cs" />
     <Compile Include="Core\Services\UI\View\BaseUIView.cs" />

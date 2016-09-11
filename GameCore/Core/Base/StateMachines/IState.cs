@@ -1,8 +1,18 @@
+using System.Threading.Tasks;
+
 namespace GameCore.Core.Base.StateMachines
 {
-    public interface IState
+    public interface IBaseState
     {
-        void EnterState(BaseEnterStateArguments arguments);
-        void ExitState();
+        Task ExitState();
+    }
+    public interface IState : IBaseState
+    {
+        Task EnterState();
+    }
+
+    public interface IState<TStateArgs> : IBaseState where TStateArgs : struct
+    {
+        Task EnterState(TStateArgs arguments);
     }
 }

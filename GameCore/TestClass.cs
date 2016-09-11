@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using GameCore.Core;
 using GameCore.Core.Base;
 using GameCore.Core.Base.Dependency;
+using GameCore.Core.Services.GameState;
 using GameCore.Core.Services.Resources;
 using GameCore.Core.UnityThreading;
 using UnityEngine;
@@ -30,6 +31,8 @@ namespace GameCore
             await Task.Delay(2500);
             GetComponent<Text>().text = $"olololo {DateTime.Now}";
        //    UnitySynchronizationContext.MakeDefault();
+            var gameState = default(GameStateService);
+            
 
         }
 
