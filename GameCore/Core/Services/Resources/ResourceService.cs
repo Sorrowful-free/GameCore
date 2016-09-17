@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using GameCore.Core.Extentions;
 using GameCore.Core.Services.Resources.Assets;
 using GameCore.Core.Services.Resources.Bundles;
+using GameCore.Core.Services.Resources.Scenes;
 using GameCore.Core.UnityThreading;
 using UnityEngine;
 using AssetBundleResource = GameCore.Core.Services.Resources.Bundles.AssetBundleResource;
@@ -18,7 +19,8 @@ namespace GameCore.Core.Services.Resources
     {
         
         private Dictionary<int, IBaseResource<AssetInfo>> _assets = new Dictionary<int, IBaseResource<AssetInfo>>();
-        private Dictionary<int, IResource<BundleInfo, AssetBundle>> _bundles = new Dictionary<int, IResource<BundleInfo, AssetBundle>>();
+        private Dictionary<int, IBaseResource<BundleInfo>> _bundles = new Dictionary<int, IBaseResource<BundleInfo>>();
+        private Dictionary<int, IBaseResource<SceneInfo>> _scenes = new Dictionary<int, IBaseResource<SceneInfo>>();
 
         public ReadOnlyCollection<int> AssetsIds { get { return new ReadOnlyCollection<int>(_assets.Keys.ToList());} }
         public ReadOnlyCollection<int> BundlesIds { get { return new ReadOnlyCollection<int>(_bundles.Keys.ToList()); } }
@@ -30,7 +32,7 @@ namespace GameCore.Core.Services.Resources
             ResourceTree = new ResourceTree();
         }
 
-        public IResource<AssetInfo,TAsset> GetAsset<TAsset>(int id) where TAsset:Object
+        public BaseResource<BundleInfo, TAsset> GetAsset<TAsset>(int id) where TAsset:Object
         {
             var resource = default(IBaseResource<AssetInfo>);
             if (!_assets.TryGetValue(id, out resource))
@@ -49,12 +51,12 @@ namespace GameCore.Core.Services.Resources
                 }
                 _assets.Add(id,resource);
             }
-            return (IResource<AssetInfo,TAsset>)resource;
+            return (BaseResource<BundleInfo, TAsset>)resource;
         }
         
-        public IResource<BundleInfo,AssetBundle> GetBundle(int id)
+        public BaseResource<BundleInfo,AssetBundle> GetBundle(int id)
         {
-            var bundle = default(IResource<BundleInfo, AssetBundle>);
+            var bundle = default(IBaseResource<BundleInfo>);
             if (!_bundles.TryGetValue(id, out bundle))
             {
                 var bundleInfo = ResourceTree.GetBundleInfo(id);
@@ -62,7 +64,26 @@ namespace GameCore.Core.Services.Resources
                 bundle = new AssetBundleResource(bundleInfo, bundlePath);
                 _bundles.Add(id,bundle);
             }
-            return bundle;
+            return (BaseResource<BundleInfo, AssetBundle>)bundle;
+        }
+
+        public BaseSceneResource GetScene(int id)
+        {
+            var scene = default(IBaseResource<SceneInfo>);
+            if (!_scenes.TryGetValue(id, out scene))
+            {
+                var sceneInfo = ResourceTree.GetSceneInfo(id);
+                if (sceneInfo.BundleId >= 0)
+                {
+                    scene = new BundleSceneResource(sceneInfo,GetBundle(sceneInfo.BundleId));
+                }
+                else
+                {
+                    scene = new LoadSceneResource(sceneInfo);
+                }
+                _scenes.Add(id, scene);
+            }
+            return (BaseSceneResource)scene;
         }
 
         public void DisposeAsset(int id)

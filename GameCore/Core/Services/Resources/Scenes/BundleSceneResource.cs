@@ -9,9 +9,9 @@ namespace GameCore.Core.Services.Resources.Scenes
 {
     public class BundleSceneResource : BaseSceneResource
     {
-        private readonly AssetBundleResource _bundle;
+        private readonly IResource<BundleInfo, AssetBundle> _bundle;
         private Coroutine _scenetCoroutine;
-        public BundleSceneResource(SceneInfo info,AssetBundleResource bundle) : base(info)
+        public BundleSceneResource(SceneInfo info,IResource<BundleInfo,AssetBundle> bundle) : base(info)
         {
             _bundle = bundle;
         }

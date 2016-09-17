@@ -32,8 +32,10 @@ namespace GameCore
             GetComponent<Text>().text = $"olololo {DateTime.Now}";
        //    UnitySynchronizationContext.MakeDefault();
             var gameState = default(GameStateService);
-           
 
+            var resourceService = default(ResourceService);
+            await resourceService.GetScene(0);
+            await resourceService.GetAsset<GameObject>(9);
         }
 
         protected override void Update()
