@@ -27,7 +27,7 @@ namespace GameCore.Core.Services.Resources
             Path = path;
         }
 
-        public void StartLoading(Action<TAsset> onLoadComplete)
+        public void Load(Action<TAsset> onLoadComplete)
         {
             if (Asset != null && IsLoaded)
             {
@@ -48,7 +48,7 @@ namespace GameCore.Core.Services.Resources
             
         }
 
-        public void StopLoading()
+        private void StopLoading()
         {
             if (_coroutine != null)
             {
@@ -71,7 +71,7 @@ namespace GameCore.Core.Services.Resources
 
         public IAwaiter<TAsset> GetAwaiter()
         {
-            return new ResourceAwaiter<TInfo,TAsset>(this);
+            return new CallbackAwaiter<TAsset>(Load);
         }
     }
 }

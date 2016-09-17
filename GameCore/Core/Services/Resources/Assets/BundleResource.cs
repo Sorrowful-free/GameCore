@@ -6,18 +6,18 @@ using Object = UnityEngine.Object;
 
 namespace GameCore.Core.Services.Resources.Assets
 {
-    public class AssetBundleResource<TAsset> : BaseResource<AssetInfo,TAsset> where TAsset : Object
+    public class BundleResource<TAsset> : BaseResource<AssetInfo,TAsset> where TAsset : Object
     {
         private readonly IResource<BundleInfo, AssetBundle> _assetBundleResource;
         private Coroutine _coroutine;
-        public AssetBundleResource(AssetInfo info, string path, IResource<BundleInfo,AssetBundle> assetBundleResource) : base(info, path)
+        public BundleResource(AssetInfo info, string path, IResource<BundleInfo,AssetBundle> assetBundleResource) : base(info, path)
         {
             _assetBundleResource = assetBundleResource;
         }
 
         protected override IEnumerator LoadResource(Action<TAsset> onLoadComplete)
         {
-            _assetBundleResource.StartLoading((bundle) =>
+            _assetBundleResource.Load((bundle) =>
             {
                _coroutine = LoadResourceFromAssetBundle(bundle, onLoadComplete).StartAsCoroutine();
             });

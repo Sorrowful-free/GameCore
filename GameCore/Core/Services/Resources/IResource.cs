@@ -7,7 +7,6 @@ namespace GameCore.Core.Services.Resources
     public interface IBaseResource<TInfo>:IDisposable
     {
         TInfo Info { get; }
-        string Path { get; }
         bool IsLoaded { get; }
         
     }
@@ -16,9 +15,9 @@ namespace GameCore.Core.Services.Resources
     {
         
         TAsset Asset { get; }
-
-        void StartLoading(Action<TAsset> onLoadComplete);
-        void StopLoading();
+        string Path { get; }
+        void Load(Action<TAsset> onLoadComplete);
+        
 
     }
 }

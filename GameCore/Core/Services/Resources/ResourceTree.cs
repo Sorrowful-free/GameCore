@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 namespace GameCore.Core.Services.Resources
 {
@@ -9,13 +10,16 @@ namespace GameCore.Core.Services.Resources
         private Dictionary<int, DirectoryInfo> _resourceDirectories;
         private Dictionary<int, AssetInfo> _assets;
         private Dictionary<int, BundleInfo> _bundles;
+        private Dictionary<int, SceneInfo> _scenes;
 
         public void InitializeResourceData(ResourcesInfo resourceInfo)
         {
             Clear();
             _resourceDirectories = resourceInfo.ResourceDirectories.ToDictionary(e => e.Id);
-            _assets = resourceInfo.Resources.ToDictionary(e => e.Id);
-            _bundles = resourceInfo.Assets.ToDictionary(e => e.Id);
+            _assets = resourceInfo.Assets.ToDictionary(e => e.Id);
+            _bundles = resourceInfo.Bundles.ToDictionary(e => e.Id);
+            _scenes = resourceInfo.Scenes.ToDictionary(e => e.Id);
+
         }
 
         public void AddResourceData(ResourcesInfo resourceInfo)
@@ -30,7 +34,7 @@ namespace GameCore.Core.Services.Resources
            
             if (_assets != null)
             {
-                foreach (var pair in resourceInfo.Resources)
+                foreach (var pair in resourceInfo.Assets)
                 {
                     _assets.Add(pair.Id, pair);
                 }
@@ -38,7 +42,7 @@ namespace GameCore.Core.Services.Resources
 
             if (_bundles != null)
             {
-                foreach (var pair in resourceInfo.Assets)
+                foreach (var pair in resourceInfo.Bundles)
                 {
                     _bundles.Add(pair.Id, pair);
                 }
@@ -86,17 +90,17 @@ namespace GameCore.Core.Services.Resources
             return "";
         }
 
-        public string GetAssetBundlePathByAssetId(int id)
+        public string GetBundlePathByAssetId(int id)
         {
             var asset = default(AssetInfo);
             if (_assets.TryGetValue(id, out asset))
             {
-                return GetAssetBundlePath(asset.BundleId);
+                return GetBundlePath(asset.BundleId);
             }
             return "";
         }
 
-        public string GetAssetBundlePath(int id)
+        public string GetBundlePath(int id)
         {
             var bundle = default(BundleInfo);
             if (_bundles.TryGetValue(id, out bundle))
@@ -109,22 +113,22 @@ namespace GameCore.Core.Services.Resources
         public AssetInfo GetAssetInfo(int id)
         {
             var resInfo = default(AssetInfo);
-            if (_assets.TryGetValue(id, out resInfo))
-            {
-                return resInfo;
-            }
+            _assets.TryGetValue(id, out resInfo);
             return resInfo;
-
         }
 
-        public BundleInfo GetAssetBundleInfo(int id)
+        public BundleInfo GetBundleInfo(int id)
         {
             var bundleInfo = default(BundleInfo);
-            if (_bundles.TryGetValue(id, out bundleInfo))
-            {
-                return bundleInfo;
-            }
+            _bundles.TryGetValue(id, out bundleInfo);
             return bundleInfo;
+        }
+
+        public SceneInfo GetSceneInfo(int id)
+        {
+            var sceneInfo = default(SceneInfo);
+            _scenes.TryGetValue(id, out sceneInfo);
+            return sceneInfo;
         }
     }
 
@@ -132,8 +136,9 @@ namespace GameCore.Core.Services.Resources
     public struct ResourcesInfo 
     {
         public List<DirectoryInfo> ResourceDirectories;
-        public List<AssetInfo> Resources;
-        public List<BundleInfo> Assets;
+        public List<AssetInfo> Assets;
+        public List<BundleInfo> Bundles;
+        public List<SceneInfo> Scenes;
     }
     
     public struct DirectoryInfo
@@ -157,5 +162,13 @@ namespace GameCore.Core.Services.Resources
         public int DirectoryId;
         public int Version;
         public string Name;
+    }
+
+    public struct SceneInfo
+    {
+        public int Id;
+        public int BundleId;
+        public string Name;
+        public LoadSceneMode LoadSceneMode;
     }
 }

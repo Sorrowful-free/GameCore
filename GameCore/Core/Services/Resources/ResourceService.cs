@@ -41,7 +41,7 @@ namespace GameCore.Core.Services.Resources
                 if (resInfo.BundleId >= 0)
                 {
                     var assetBundle = GetBundle(resInfo.BundleId);
-                    resource = new AssetBundleResource<TAsset>(resInfo, resPath, assetBundle);
+                    resource = new BundleResource<TAsset>(resInfo, resPath, assetBundle);
                 }
                 else
                 {
@@ -57,8 +57,8 @@ namespace GameCore.Core.Services.Resources
             var bundle = default(IResource<BundleInfo, AssetBundle>);
             if (!_bundles.TryGetValue(id, out bundle))
             {
-                var bundleInfo = ResourceTree.GetAssetBundleInfo(id);
-                var bundlePath = ResourceTree.GetAssetBundlePath(id);
+                var bundleInfo = ResourceTree.GetBundleInfo(id);
+                var bundlePath = ResourceTree.GetBundlePath(id);
                 bundle = new AssetBundleResource(bundleInfo, bundlePath);
                 _bundles.Add(id,bundle);
             }
@@ -99,8 +99,8 @@ namespace GameCore.Core.Services.Resources
             var hasUpdate = false;
             foreach (var bundlesId in BundlesIds)
             {
-                var path = ResourceTree.GetAssetBundlePath(bundlesId);
-                var bundleInfo = ResourceTree.GetAssetBundleInfo(bundlesId);
+                var path = ResourceTree.GetBundlePath(bundlesId);
+                var bundleInfo = ResourceTree.GetBundleInfo(bundlesId);
                 var needCheck = !path.ToLower().Replace("\\", "/").Contains("file://"); // если файл не локальный то надо проверить на апдейт
                 if (needCheck)
                 {
@@ -113,7 +113,7 @@ namespace GameCore.Core.Services.Resources
         public async Task LoadAllAssetBundles(Action<float> onProgress)
         {
             var progress = 0.0f;
-            var ids = await Task<int[]>.Factory.StartNew(() => BundlesIds.Where( e => !ResourceTree.GetAssetBundlePath(e).ToLower().Replace("\\", "/").Contains("file://")).ToArray()
+            var ids = await Task<int[]>.Factory.StartNew(() => BundlesIds.Where( e => !ResourceTree.GetBundlePath(e).ToLower().Replace("\\", "/").Contains("file://")).ToArray()
 #if UNITY_WEBGL
             ,
             CancellationToken.None,

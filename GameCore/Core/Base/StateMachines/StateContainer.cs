@@ -16,23 +16,24 @@ namespace GameCore.Core.Base.StateMachines
         {
             State = state;
         }
-        
+
         public override async Task ExitState()
         {
-            await ((IState)State).EnterState();
+            await State.ExitState();
         }
 
         public override async Task EnterState()
         {
-            await State.ExitState();
+            await ((IState) State).ExitState();
         }
     }
 
-    public class StateContainer<TStateArgs> : BaseStateContainer where TStateArgs : struct
+    public class StateContainer<TStateArgs> : BaseStateContainer
+        where TStateArgs : struct
     {
         public TStateArgs Arguments { get; private set; }
 
-        public StateContainer(IState<TStateArgs> state, TStateArgs arguments)
+        public StateContainer(IState<TStateArgs> state,TStateArgs arguments)
         {
             State = state;
             Arguments = arguments;
@@ -40,12 +41,12 @@ namespace GameCore.Core.Base.StateMachines
 
         public override async Task ExitState()
         {
-            await ((IState<TStateArgs>)State).EnterState(Arguments);
+            await State.ExitState();
         }
 
         public override async Task EnterState()
         {
-            await State.ExitState();
+            await ((IState<TStateArgs>)State).EnterState(Arguments);
         }
     }
 }

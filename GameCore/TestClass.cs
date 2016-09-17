@@ -23,7 +23,7 @@ namespace GameCore
 
         public async Task Test()
         {
-         //   UnitySynchronizationContext.MakeUnity();
+            UnitySynchronizationContext.MakeUnity();
          //   await Task.Delay(2500);
             GetComponent<Text>().text = $"olololo {DateTime.Now}";
 
@@ -32,7 +32,7 @@ namespace GameCore
             GetComponent<Text>().text = $"olololo {DateTime.Now}";
        //    UnitySynchronizationContext.MakeDefault();
             var gameState = default(GameStateService);
-            
+           
 
         }
 

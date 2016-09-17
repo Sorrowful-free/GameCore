@@ -11,7 +11,7 @@ namespace GameCore.Core.Base.StateMachines
         
         public async Task PushState<TCurrentState>() where TCurrentState : TState, IState, new()
         {
-            var state = new StateContainer(new TCurrentState());
+            var state = MakeContainer<TCurrentState>();
             _statesContainersStack.Push(state);
             await EnterToState(state);
         }
@@ -20,7 +20,7 @@ namespace GameCore.Core.Base.StateMachines
             where TCurrentState : TState, IState<TStateArgs>, new()
             where TStateArgs : struct
         {
-            var state = new StateContainer<TStateArgs>(new TCurrentState(), arguments);
+            var state = MakeContainer<TCurrentState, TStateArgs>(arguments);
             _statesContainersStack.Push(state);
             await EnterToState(state);
         }
@@ -33,7 +33,7 @@ namespace GameCore.Core.Base.StateMachines
         public async Task SetState<TCurrentState>() where TCurrentState : TState, IState, new()
         {
             ClearStateStack();
-            var state = new StateContainer(new TCurrentState());
+            var state = MakeContainer<TCurrentState>();
             await EnterToState(state);
         }
 
@@ -42,7 +42,7 @@ namespace GameCore.Core.Base.StateMachines
             where TStateArgs : struct
         {
             ClearStateStack();
-            var state = new StateContainer<TStateArgs>(new TCurrentState(),arguments);
+            var state = MakeContainer<TCurrentState,TStateArgs>(arguments);
             await EnterToState(state);
         }
 
@@ -56,15 +56,23 @@ namespace GameCore.Core.Base.StateMachines
             if (_currentStateContainer != null)
             {
                 await _currentStateContainer.ExitState();
-                await OnAfterExitState((TState) _currentStateContainer.State);
             }
             _currentStateContainer = stateContainer;
-            await OnBeforeEnterState((TState)_currentStateContainer.State);
             await _currentStateContainer.EnterState();
         }
 
-        protected abstract Task OnBeforeEnterState(TState state);
+        protected virtual BaseStateContainer MakeContainer<TCurrentState>()
+            where TCurrentState : TState, IState, new ()
+        {
+            return new StateContainer<TCurrentState>(new TCurrentState());
+        }
 
-        protected abstract Task OnAfterExitState(TState state);
+        protected virtual BaseStateContainer MakeContainer<TCurrentState, TStateArgs>(TStateArgs arguments)
+             where TCurrentState : TState, IState<TStateArgs>, new()
+            where TStateArgs : struct
+        {
+            return new StateContainer<TCurrentState,TStateArgs>(new TCurrentState(), arguments);
+        }
+
     }
 }
