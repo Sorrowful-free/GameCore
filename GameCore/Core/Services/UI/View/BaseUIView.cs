@@ -1,4 +1,5 @@
-﻿using GameCore.Core.Services.UI.ViewModel;
+﻿using System.Threading.Tasks;
+using GameCore.Core.Services.UI.ViewModel;
 
 namespace GameCore.Core.Services.UI.View
 {
@@ -15,7 +16,7 @@ namespace GameCore.Core.Services.UI.View
     {
         public TViewModel ViewModel { get; private set; }
 
-        public void InitializeViewModel(TViewModel viewModel)
+        public void BindViewModel(TViewModel viewModel)
         {
             ViewModel = viewModel;
             ViewModel.Visible.Bind((visible)=>Visible = visible);

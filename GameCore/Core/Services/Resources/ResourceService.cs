@@ -32,7 +32,7 @@ namespace GameCore.Core.Services.Resources
             ResourceTree = new ResourceTree();
         }
 
-        public BaseResource<BundleInfo, TAsset> GetAsset<TAsset>(int id) where TAsset:Object
+        public BaseResource<AssetInfo, TAsset> GetAsset<TAsset>(int id) where TAsset:Object
         {
             var resource = default(IBaseResource<AssetInfo>);
             if (!_assets.TryGetValue(id, out resource))
@@ -51,7 +51,7 @@ namespace GameCore.Core.Services.Resources
                 }
                 _assets.Add(id,resource);
             }
-            return (BaseResource<BundleInfo, TAsset>)resource;
+            return (BaseResource<AssetInfo, TAsset>)resource;
         }
         
         public BaseResource<BundleInfo,AssetBundle> GetBundle(int id)
@@ -134,14 +134,13 @@ namespace GameCore.Core.Services.Resources
         public async Task LoadAllAssetBundles(Action<float> onProgress)
         {
             var progress = 0.0f;
-            var ids = await Task<int[]>.Factory.StartNew(() => BundlesIds.Where( e => !ResourceTree.GetBundlePath(e).ToLower().Replace("\\", "/").Contains("file://")).ToArray()
-#if UNITY_WEBGL
-            ,
-            CancellationToken.None,
-            TaskCreationOptions.None, 
-            UnityTaskScheduler.Instance
-#endif
-            );
+            var ids =
+                await
+                    UnityTask<int[]>.Factory.StartNew(
+                        () =>
+                            BundlesIds.Where(
+                                e => !ResourceTree.GetBundlePath(e).ToLower().Replace("\\", "/").Contains("file://"))
+                                .ToArray());
             var percentPerBundle = 1.0f/(float) ids.Length;
             foreach (var bundlesId in ids)
             {
@@ -149,9 +148,6 @@ namespace GameCore.Core.Services.Resources
                 progress += percentPerBundle;
                 onProgress.SafeInvoke(progress);
             }
-#if !UNITY_WEBGL
-            await Task.Delay(100);
-#endif
         }
     }
 }

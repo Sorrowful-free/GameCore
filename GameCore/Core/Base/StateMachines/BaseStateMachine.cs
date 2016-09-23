@@ -64,14 +64,14 @@ namespace GameCore.Core.Base.StateMachines
         protected virtual BaseStateContainer MakeContainer<TCurrentState>()
             where TCurrentState : TState, IState, new ()
         {
-            return new StateContainer<TCurrentState>(new TCurrentState());
+            return new StateContainer(new TCurrentState());
         }
 
         protected virtual BaseStateContainer MakeContainer<TCurrentState, TStateArgs>(TStateArgs arguments)
              where TCurrentState : TState, IState<TStateArgs>, new()
             where TStateArgs : struct
         {
-            return new StateContainer<TCurrentState,TStateArgs>(new TCurrentState(), arguments);
+            return new StateContainer<TStateArgs>(new TCurrentState(), arguments);
         }
 
     }

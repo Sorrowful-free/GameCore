@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GameCore.Core.UnityThreading
 {
-    public class UnityTaskFactory
+    public class UnityTask
     {
         private static TaskFactory _factory;
         public static TaskFactory Factory
@@ -25,7 +25,7 @@ namespace GameCore.Core.UnityThreading
         }
     }
 
-    public class UnityTaskFactory<TResult>
+    public class UnityTask<TResult>
     {
         private static TaskFactory<TResult> _factory;
         public static TaskFactory<TResult> Factory

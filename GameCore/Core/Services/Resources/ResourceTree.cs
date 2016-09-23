@@ -162,6 +162,7 @@ namespace GameCore.Core.Services.Resources
         public int DirectoryId;
         public int Version;
         public string Name;
+        public int Size;
     }
 
     public struct SceneInfo
