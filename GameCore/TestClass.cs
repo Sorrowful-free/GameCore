@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using GameCore.Core;
@@ -7,6 +8,7 @@ using GameCore.Core.Base.Dependency;
 using GameCore.Core.Services.GameState;
 using GameCore.Core.Services.Resources;
 using GameCore.Core.UnityThreading;
+using MonoLib.Async;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,6 +38,9 @@ namespace GameCore
             var resourceService = default(ResourceService);
             await resourceService.GetScene(0);
             await resourceService.GetAsset<GameObject>(9);
+            await new GameTimer(5);
+
+
         }
 
         protected override void Update()

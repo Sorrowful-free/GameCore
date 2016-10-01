@@ -52,6 +52,7 @@
     <Compile Include="Core\Application\GameApplication.MonoBehaviour.cs" />
     <Compile Include="Core\Application\GameApplication.StaticMethods.cs" />
     <Compile Include="Core\Base\Dependency\DependencyInjectionExtention.cs" />
+    <Compile Include="Core\Base\GameTimer.cs" />
     <Compile Include="Core\Base\StateMachines\BaseStateMachine.cs" />
     <Compile Include="Core\Base\StateMachines\IState.cs" />
     <Compile Include="Core\Base\Dependency\DependencyInjector.cs" />
@@ -61,15 +62,15 @@
     <Compile Include="Core\Extentions\TypeExtention.cs" />
     <Compile Include="Core\Services\GameState\GameStateService.cs" />
     <Compile Include="Core\Services\GameState\IGameState.cs" />
-    <Compile Include="Core\Attributes\UIViewResourceAttribute.cs" />
+    <Compile Include="Core\Attributes\ResourceUIViewLoadAttribute.cs" />
     <Compile Include="Core\Services\Resources\Scenes\BaseSceneResource.cs" />
     <Compile Include="Core\Services\Resources\Scenes\BundleSceneResource.cs" />
     <Compile Include="Core\Services\Resources\Scenes\LoadSceneResource.cs" />
     <Compile Include="Core\Services\UI\UILayers.cs" />
-    <Compile Include="Core\Services\UI\Attributes\IUIViewAttribute.cs" />
+    <Compile Include="Core\Services\UI\Attributes\IUIViewLoadAttribute.cs" />
     <Compile Include="Core\Services\UI\View\BaseUIBehaviour.cs" />
     <Compile Include="Core\Services\UI\View\BaseUIView.cs" />
-    <Compile Include="Core\Services\UI\ViewModel\BaseViewModel.cs" />
+    <Compile Include="Core\Services\UI\ViewModel\BaseUIViewModel.cs" />
     <Compile Include="Core\Services\UI\UIService.cs" />
     <Compile Include="Core\Services\UI\ViewModel\BindingCommand.cs" />
     <Compile Include="Core\Services\UI\ViewModel\BindingProperty.cs" />

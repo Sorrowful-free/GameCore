@@ -42,7 +42,6 @@ namespace GameCore.Core.UnityThreading
             _instance.StopAllCoroutines();
         }
 
-        [RuntimeInitializeOnLoadMethod]
         private static void Initialize()
         {
             MainThread = Thread.CurrentThread;
@@ -51,6 +50,7 @@ namespace GameCore.Core.UnityThreading
                 unityMainThread = new GameObject("UnityMainThread").AddComponent<UnityMainThread>();
             unityMainThread.gameObject.hideFlags = HideFlags.HideInHierarchy | HideFlags.HideInInspector | HideFlags.NotEditable;
             _instance = unityMainThread;
+            UnitySynchronizationContext.MakeUnity();
         }
 
         private Stopwatch _stopwatch = new Stopwatch();

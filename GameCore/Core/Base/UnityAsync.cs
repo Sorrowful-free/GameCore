@@ -12,5 +12,20 @@ namespace GameCore.Core.Base
             task.Start(UnityTaskScheduler.Instance);
             return await task;
         }
+
+        public async static Task Destroy(Object obj)
+        {
+            var task = new Task(() =>
+            {
+                if (UnityEngine.Application.isEditor)
+                    Object.DestroyImmediate(obj);
+                else
+                    Object.Destroy(obj);
+            }
+            
+            );
+            task.Start(UnityTaskScheduler.Instance);
+            await task;
+        }
     }
 }

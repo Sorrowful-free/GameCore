@@ -1,35 +1,44 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using GameCore.Core.Extentions;
 using GameCore.Core.Services.UI.ViewModel;
 
 namespace GameCore.Core.Services.UI.View
 {
     public abstract class BaseUIView : BaseUIBehaviour
     {
+        public event Action<bool> OnVisibleChange;
         public bool Visible
         {
             get { return gameObject.activeSelf; }
-            set { gameObject.SetActive(value); }
-        }
-    }
-
-    public abstract class BaseUIView<TViewModel> : BaseUIView where TViewModel : BaseViewModel
-    {
-        public TViewModel ViewModel { get; private set; }
-
-        public void BindViewModel(TViewModel viewModel)
-        {
-            ViewModel = viewModel;
-            ViewModel.Visible.Bind((visible)=>Visible = visible);
-            OnInitialize();
+            set
+            {
+                gameObject.SetActive(value);
+                OnVisibleChange.SafeInvoke(value);
+            }
         }
 
-        public void Deinitialize()
+        public async Task Deinitialize()
         {
             OnDeinitialize();
         }
 
-        protected abstract void OnInitialize();
+        protected abstract Task OnDeinitialize();
+    }
 
-        protected abstract void OnDeinitialize();
+    public abstract class BaseUIView<TViewModel> : BaseUIView where TViewModel : BaseUIViewModel
+    {
+        public TViewModel ViewModel { get; private set; }
+
+        public async Task Initialize(TViewModel viewModel)
+        {
+            ViewModel = viewModel;
+            ViewModel.Visible.Bind((visible) => Visible = visible);
+            await OnInitialize();
+        }
+        
+        protected abstract Task OnInitialize();
+
+       
     } 
 }
