@@ -4,7 +4,7 @@ using UnityEngine;
 namespace GameCore.Core.Services.UI.Attributes
 {
     
-    public interface IUIViewLoadAttribute
+    public interface IGameObjectLoadAttribute
     {
         Task<GameObject> LoadViewGameObject();
 

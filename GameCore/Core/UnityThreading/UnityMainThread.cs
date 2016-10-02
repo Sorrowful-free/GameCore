@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using GameCore.Core.Base;
-using UnityEditor;
+using JetBrains.Annotations;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -42,15 +42,16 @@ namespace GameCore.Core.UnityThreading
             _instance.StopAllCoroutines();
         }
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Initialize()
         {
+            UnitySynchronizationContext.MakeUnity();
             MainThread = Thread.CurrentThread;
             var unityMainThread = FindObjectOfType<UnityMainThread>();
             if (unityMainThread == null)
                 unityMainThread = new GameObject("UnityMainThread").AddComponent<UnityMainThread>();
             unityMainThread.gameObject.hideFlags = HideFlags.HideInHierarchy | HideFlags.HideInInspector | HideFlags.NotEditable;
             _instance = unityMainThread;
-            UnitySynchronizationContext.MakeUnity();
         }
 
         private Stopwatch _stopwatch = new Stopwatch();
@@ -74,8 +75,10 @@ namespace GameCore.Core.UnityThreading
                 {
                     Debug.LogException(e);
                 }
+                
             }
             _stopwatch.Stop();
+            Debug.Log(_queue.Count);
         }
     }
 }

@@ -1,33 +1,66 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Assets.Scripts.Core.Extentions;
+using GameCore.Core.Application.Interfaces;
 using GameCore.Core.Base;
 using GameCore.Core.Services.UI.Attributes;
+using GameCore.Core.Services.UI.Layers;
+using GameCore.Core.Services.UI.Layers.Info;
 using GameCore.Core.Services.UI.View;
 using GameCore.Core.Services.UI.ViewModel;
+using GameCore.Core.UnityThreading;
+using UnityEngine;
 
 
 namespace GameCore.Core.Services.UI
 {
-    public class UIService : BaseMonoBehaviour
+    public abstract class BaseUIService<TUILayerType> : BaseUIBehaviour , IService
+        where TUILayerType : struct
     {
         private readonly Dictionary<Type, BaseUIViewModel> _uiViewModelMap = new Dictionary<Type, BaseUIViewModel>();
         private readonly Dictionary<Type, BaseUIView> _uiViewMap = new Dictionary<Type, BaseUIView>();
         private readonly Dictionary<BaseUIViewModel, BaseUIView> _uiMap = new Dictionary<BaseUIViewModel, BaseUIView>();
         private readonly Stack<BaseUIView> _viewStack = new Stack<BaseUIView>();
-        public async Task<TView> PushView<TView>(UILayers layer) where TView : BaseUIView
+        private readonly Dictionary<TUILayerType, UILayer> _layersMap = new Dictionary<TUILayerType, UILayer>();
+
+        public abstract Task Initialize();
+
+        public abstract Task Deinitialize();
+
+        protected async Task AddLayer(TUILayerType type, UILayerInfo layerInfo)
         {
-            var uiView = await GetViewInstance<TView>(layer);
+            var layer = await UILayerFactory.CreateLayer(layerInfo, gameObject);
+            layer.RectTransfrom.SetParent(RectTransfrom);
+            _layersMap.Add(type, layer);
+            layer.name = $"Layer{type}";
+        }
+
+        protected async Task RemoveLayer(TUILayerType type)
+        {
+            if (_layersMap.ContainsKey(type))
+            {
+                await UnityAsync.Destroy(_layersMap[type].gameObject);
+                await UnityTask.Factory.StartNew(() =>
+                {
+                    _layersMap.Remove(type);
+                });
+            }
+        }
+
+        public async Task<TView> PushView<TView>(TUILayerType layerType) where TView : BaseUIView
+        {
+            var uiView = await GetViewInstance<TView>(layerType);
             _viewStack.Push(uiView);
             return uiView;
         }
 
-        public async Task<TViewModel> PushView<TView,TViewModel>(UILayers layer) 
+        public async Task<TViewModel> PushView<TView,TViewModel>(TUILayerType layerType) 
             where TView : BaseUIView<TViewModel>
             where TViewModel : BaseUIViewModel,new()
         {
-            var uiViewModel = await GetViewInstance<TView, TViewModel>(layer);
+            var uiViewModel = await GetViewInstance<TView, TViewModel>(layerType);
             _viewStack.Push(_uiMap[uiViewModel]);
             return uiViewModel;
         }
@@ -41,7 +74,7 @@ namespace GameCore.Core.Services.UI
             }
         }
 
-        public async Task<TView> GetViewInstance<TView>(UILayers layer) where TView : BaseUIView
+        public async Task<TView> GetViewInstance<TView>(TUILayerType layerType) where TView : BaseUIView
         {
             var type = typeof (TView);
             var uiView = default(BaseUIView);
@@ -52,18 +85,20 @@ namespace GameCore.Core.Services.UI
                 var uiViewGameObject = await UnityAsync.Instantiate(gameObject);
                 uiView = uiViewGameObject.GetComponent<TView>();
                 _uiViewMap.Add(type,uiView);
+                _layersMap[layerType].AddChild(uiView);
             }
             return (TView)uiView;
         }
 
-        public async Task<TViewModel> GetViewInstance<TView, TViewModel>(UILayers layer)
+        public async Task<TViewModel> GetViewInstance<TView, TViewModel>(TUILayerType layerType)
             where TView : BaseUIView<TViewModel>
             where TViewModel : BaseUIViewModel,new()
         {
-            var uiView = await GetViewInstance<TView>(layer);
+            var uiView = await GetViewInstance<TView>(layerType);
             var uiViewModel = TryGerOrAddViewModel<TViewModel>();
             _uiMap.Add(uiViewModel,uiView);
             await uiView.Initialize(uiViewModel);
+            _layersMap[layerType].AddChild(uiView);
             return uiViewModel;
         }
 
@@ -80,6 +115,8 @@ namespace GameCore.Core.Services.UI
             }
             var attribute = GetAttribute(type);
             await view.Deinitialize();
+            var layer = _layersMap.FirstOrDefault(e => e.Value.ContainChild(view)).Value;
+            layer.RemoveChild(view);
             await UnityAsync.Destroy(view.gameObject);
             await attribute.UnloadViewGameObject();
         }
@@ -111,14 +148,16 @@ namespace GameCore.Core.Services.UI
             return (TViewModel)viewModel;
         }
 
-        private IUIViewLoadAttribute GetAttribute(Type typeOfView)
+        private IGameObjectLoadAttribute GetAttribute(Type typeOfView)
         {
-            var attribute = typeOfView.GetAttributeByInterface<IUIViewLoadAttribute>();
+            var attribute = typeOfView.GetAttributeByInterface<IGameObjectLoadAttribute>();
             if (attribute == null)
             {
-                throw new ArgumentException("please use attribute implemented from IUIViewAttribute");
+                throw new ArgumentException("please use attribute implemented from IGameObjectLoadAttribute");
             }
             return attribute;
         }
+
+        
     }
 }

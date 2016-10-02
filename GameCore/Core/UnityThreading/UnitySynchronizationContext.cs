@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using UnityEngine;
 
 namespace GameCore.Core.UnityThreading
@@ -29,8 +30,7 @@ namespace GameCore.Core.UnityThreading
         {
             UnityMainThread.QueueUserWorkItem(() =>
             {
-                if (d != null)
-                    d(state);
+               Send(d,state);
             });
         }
 
@@ -38,6 +38,7 @@ namespace GameCore.Core.UnityThreading
         {
             if (d != null)
                 d(state);
+            
         }
     }
 }
