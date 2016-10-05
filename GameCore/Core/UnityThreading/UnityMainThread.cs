@@ -74,11 +74,11 @@ namespace GameCore.Core.UnityThreading
                 catch (Exception e)
                 {
                     Debug.LogException(e);
+                    throw e;
                 }
                 
             }
             _stopwatch.Stop();
-            Debug.Log(_queue.Count);
         }
     }
 }
