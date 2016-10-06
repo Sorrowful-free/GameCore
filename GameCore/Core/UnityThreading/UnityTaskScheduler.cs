@@ -26,11 +26,9 @@ namespace GameCore.Core.UnityThreading
 
         protected override void QueueTask(Task task)
         {
-            UnityMainThread.QueueUserWorkItem(() =>
-            {
-                TryExecuteTask(task);
-            });
+            UnityMainThread.QueueUserWorkItem(TaskExecuterCallback, task);
         }
+
 
         protected override bool TryExecuteTaskInline(Task task, bool taskWasPreviouslyQueued)
         {
@@ -39,5 +37,7 @@ namespace GameCore.Core.UnityThreading
 
             return TryExecuteTask(task);
         }
+
+
     }
 }

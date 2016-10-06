@@ -28,6 +28,7 @@ namespace GameCore.Core.UnityThreading
         
         public override void Post(SendOrPostCallback d, object state)
         {
+            Debug.Log(d+": "+state);
             UnityMainThread.QueueUserWorkItem(() =>
             {
                Send(d,state);
@@ -36,9 +37,7 @@ namespace GameCore.Core.UnityThreading
 
         public override void Send(SendOrPostCallback d, object state)
         {
-            if (d != null)
-                d(state);
-            
+            d?.Invoke(state);
         }
     }
 }

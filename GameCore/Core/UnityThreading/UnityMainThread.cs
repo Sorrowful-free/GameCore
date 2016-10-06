@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using GameCore.Core.Base;
-using JetBrains.Annotations;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -17,9 +16,9 @@ namespace GameCore.Core.UnityThreading
         private static Queue<Action> _queue = new Queue<Action>();
         private static UnityMainThread _instance;
 
-        public static void QueueUserWorkItem(Action action)
+        public static void QueueUserWorkItem(WaitCallback callback,object state)
         {
-            _queue.Enqueue(action);
+            _queue.Enqueue(()=>callback(state));
         }
 
         public static Coroutine StartGlobalCoroutine(IEnumerator coroutine)

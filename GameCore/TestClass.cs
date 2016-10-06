@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using GameCore.Core.Base;
 using GameCore.Core.Services.UI;
 using GameCore.Core.Services.UI.Layers.Info;
+using GameCore.Core.UnityThreading;
 using UnityEngine;
 
 namespace GameCore
@@ -35,10 +37,20 @@ namespace GameCore
         {
             Debug.Log("start");
             var service = gameObject.AddComponent<TestUIService>();
-            await service.Initialize();
+           // await service.Initialize();
+            UnitySynchronizationContext.MakeUnity();
+
+            await Task.Factory.StartNew(() =>
+                {
+                    throw new ApplicationException("ololosh");
+                });
+            
+
+            
+            
             Debug.Log("end");
         }
-
+        
       
     }
 }
