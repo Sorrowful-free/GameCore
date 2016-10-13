@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using Assets.Scripts.Core.Extentions;
+using GameCore.Core.Base.Dependency.Attributes;
 using UnityEngine;
 
 namespace GameCore.Core
@@ -11,6 +13,13 @@ namespace GameCore.Core
             var type = typeof(TDependency);
             var implementedType = GetDependencyType(type);
             var dependency = (TDependency)Activator.CreateInstance(implementedType);
+            return dependency;
+        }
+
+        public static TBaseDependency GetDependency<TBaseDependency>(Type type)
+        {
+            var implementedType = GetDependencyType(type);
+            var dependency = (TBaseDependency)Activator.CreateInstance(implementedType);
             return dependency;
         }
 
@@ -42,24 +51,14 @@ namespace GameCore.Core
             return (TDependency)(object)component;
         }
 
-        private static Type GetDependencyType(Type interfaceType)
+        public static Type GetDependencyType(Type interfaceType)
         {
-            var allTypes =
-                AppDomain.CurrentDomain.GetAssemblies()
+            return AppDomain.CurrentDomain
+                    .GetAssemblies()
                     .SelectMany(e => e.GetTypes())
-                    .Where(t => interfaceType.IsAssignableFrom(t) && !t.IsInterface);
-            if (allTypes.Count() > 1)
-            {
-                //TODO Logging
-            }
-
-            if (allTypes.Count() == 0)
-            {
-                //TODO Logging
-                return null;
-            }
-            var implementedType = allTypes.FirstOrDefault();
-            return implementedType;
+                    .FirstOrDefault(t => interfaceType.IsAssignableFrom(t) 
+                    && !t.IsInterface 
+                    && t.GetAttribute<PlatformDependencAttribute>()?.Platform == UnityEngine.Application.platform);
         }
     }
 }

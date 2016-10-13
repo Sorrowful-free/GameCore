@@ -1,16 +1,13 @@
-﻿using System;
-using System.Threading;
-using UnityEngine;
+﻿using System.Threading;
 
 namespace GameCore.Core.UnityThreading
 {
-    public class UnitySynchronizationContext : SynchronizationContext
+    public static class UnitySynchronizationContext
     {
-        
         static UnitySynchronizationContext()
         {
-            Default = Current;
-            Unity = new UnitySynchronizationContext();
+            Default = new UnityThreadPoolSynchronizationContext();
+            Unity = new UnityMainThreadSynchronizationContext();
         }
 
         public static readonly SynchronizationContext Unity;
@@ -18,26 +15,12 @@ namespace GameCore.Core.UnityThreading
 
         public static void MakeUnity()
         {
-            SetSynchronizationContext(Unity);
+            SynchronizationContext.SetSynchronizationContext(Unity);
         }
 
         public static void MakeDefault()
         {
-            SetSynchronizationContext(Default);
-        }
-        
-        public override void Post(SendOrPostCallback d, object state)
-        {
-            Debug.Log(d+": "+state);
-            UnityMainThread.QueueUserWorkItem(() =>
-            {
-               Send(d,state);
-            });
-        }
-
-        public override void Send(SendOrPostCallback d, object state)
-        {
-            d?.Invoke(state);
+            SynchronizationContext.SetSynchronizationContext(Default);
         }
     }
 }

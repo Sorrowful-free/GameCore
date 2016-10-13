@@ -9,7 +9,7 @@ namespace GameCore.Core.Base
         public async static Task<TObject> Instantiate<TObject>(TObject original) where TObject : Object
         {
             var task = new Task<TObject>(() => Object.Instantiate(original));
-            task.Start(UnityTaskScheduler.Instance);
+            task.Start(UnityMainThreadTaskScheduler.Instance);
             return await task;
         }
 
@@ -24,7 +24,7 @@ namespace GameCore.Core.Base
             }
             
             );
-            task.Start(UnityTaskScheduler.Instance);
+            task.Start(UnityMainThreadTaskScheduler.Instance);
             await task;
         }
     }

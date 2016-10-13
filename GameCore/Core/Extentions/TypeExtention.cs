@@ -20,7 +20,7 @@ namespace Assets.Scripts.Core.Extentions
         }
 
 
-        public static TInterface[] GetAttributeByInterfaces<TInterface>(this Type type, bool inherit = false) where TInterface : class
+        public static TInterface[] GetAttributesByInterface<TInterface>(this Type type, bool inherit = false) where TInterface : class
         {
             var attributes = Attribute.GetCustomAttributes(type, typeof(Attribute), inherit);
             var result = new List<TInterface>();

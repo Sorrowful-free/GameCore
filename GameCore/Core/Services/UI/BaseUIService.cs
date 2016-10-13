@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Assets.Scripts.Core.Extentions;
-using GameCore.Core.Application.Interfaces;
+using GameCore.Core.Application.Interfaces.Services;
 using GameCore.Core.Base;
 using GameCore.Core.Services.UI.Attributes;
 using GameCore.Core.Services.UI.Layers;
@@ -42,7 +42,7 @@ namespace GameCore.Core.Services.UI
             if (_layersMap.ContainsKey(type))
             {
                 await UnityAsync.Destroy(_layersMap[type].gameObject);
-                await UnityTask.Factory.StartNew(() =>
+                await UnityTask.ThreadPoolFactory.StartNew(() =>
                 {
                     _layersMap.Remove(type);
                 });

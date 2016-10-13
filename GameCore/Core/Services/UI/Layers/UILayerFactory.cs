@@ -17,7 +17,7 @@ namespace GameCore.Core.Services.UI.Layers
                 uiLayerGameObject.transform.SetParent(root.transform);
                 return ApplySettings(uiLayerGameObject, layerInfo);
             });
-            task.Start(UnityTaskScheduler.Instance);
+            task.Start(UnityMainThreadTaskScheduler.Instance);
             return await task;
         }
 

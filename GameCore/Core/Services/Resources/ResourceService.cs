@@ -136,7 +136,7 @@ namespace GameCore.Core.Services.Resources
             var progress = 0.0f;
             var ids =
                 await
-                    UnityTask<int[]>.Factory.StartNew(
+                    UnityTask<int[]>.ThreadPoolFactory.StartNew(
                         () =>
                             BundlesIds.Where(
                                 e => !ResourceTree.GetBundlePath(e).ToLower().Replace("\\", "/").Contains("file://"))

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -13,12 +14,12 @@ namespace GameCore.Core.UnityThreading
     {
         public const int MAX_TIME_FOR_EXECUTE_TIME = 50;
         public static Thread MainThread { get; private set; }
-        private static Queue<Action> _queue = new Queue<Action>();
+        private static ConcurrentQueue<Tuple<WaitCallback,object>> _queue = new ConcurrentQueue<Tuple<WaitCallback, object>>();
         private static UnityMainThread _instance;
 
         public static void QueueUserWorkItem(WaitCallback callback,object state)
         {
-            _queue.Enqueue(()=>callback(state));
+            _queue.Enqueue(new Tuple<WaitCallback, object>(callback, state));
         }
 
         public static Coroutine StartGlobalCoroutine(IEnumerator coroutine)
@@ -44,7 +45,6 @@ namespace GameCore.Core.UnityThreading
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Initialize()
         {
-            UnitySynchronizationContext.MakeUnity();
             MainThread = Thread.CurrentThread;
             var unityMainThread = FindObjectOfType<UnityMainThread>();
             if (unityMainThread == null)
@@ -61,21 +61,12 @@ namespace GameCore.Core.UnityThreading
             _stopwatch.Start();
             while (_queue.Count > 0 && _stopwatch.ElapsedMilliseconds < MAX_TIME_FOR_EXECUTE_TIME)
             {
-                var action = _queue.Dequeue();
-                try
+                var callbackPair = default(Tuple<WaitCallback, object>);
+                if (_queue.TryDequeue(out callbackPair))
                 {
-                    var handler = action;
-                    if (handler != null)
-                    {
-                        action();
-                    }
+                    if (callbackPair.Item1 != null)
+                        callbackPair.Item1(callbackPair.Item2);
                 }
-                catch (Exception e)
-                {
-                    Debug.LogException(e);
-                    throw e;
-                }
-                
             }
             _stopwatch.Stop();
         }

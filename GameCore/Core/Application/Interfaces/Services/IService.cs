@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace GameCore.Core.Application.Interfaces
+namespace GameCore.Core.Application.Interfaces.Services
 {
     public interface IService
     {

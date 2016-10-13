@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
+using GameCore.Core.Application;
 using GameCore.Core.Base;
 using GameCore.Core.Services.UI;
 using GameCore.Core.Services.UI.Layers.Info;
 using GameCore.Core.UnityThreading;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace GameCore
 {
@@ -33,22 +36,44 @@ namespace GameCore
     }
     public class TestClass : BaseMonoBehaviour
     {
-        protected override async void Awake()
+        protected async override void Awake()
         {
             Debug.Log("start");
-            var service = gameObject.AddComponent<TestUIService>();
-           // await service.Initialize();
             UnitySynchronizationContext.MakeUnity();
-
-            await Task.Factory.StartNew(() =>
+            try
+            {
+                await UnityTask.MainThreadFactory.StartNew(() =>
                 {
-                    throw new ApplicationException("ololosh");
+                    throw new Exception("ololsh");
                 });
-            
+            }
+            catch (Exception ex)
+            {
+                
+                Debug.Log("asdasdasd"+ex);
+            }
+           
+          
+            StackTracePrint();
 
-            
-            
-            Debug.Log("end");
+
+
+
+
+            // await service.Initialize();
+
+
+        }
+
+        private void StackTracePrint()
+        {
+            Debug.Log(StackTraceUtility.ExtractStackTrace());
+        }
+        private async Task TestExecute()
+        {
+
+            await Task.Delay(0);
+            Debug.Log("exception");
         }
         
       

@@ -5,9 +5,11 @@ namespace GameCore.Core.Application
 {
     public partial class GameApplication : BaseMonoBehaviour
     {
+        private static GameApplication _instance;
         protected override void OnEnable()
         {
             base.OnEnable();
+            _instance = this;
             OnAppEnable.SafeInvoke();
         }
 
@@ -27,18 +29,21 @@ namespace GameCore.Core.Application
         {
             base.Update();
             OnAppUpdate.SafeInvoke();
+            UpdateServices();
         }
 
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
             OnAppFixedUpdate.SafeInvoke();
+            FixedUpdateServices();
         }
 
         protected override void LateUpdate()
         {
             base.LateUpdate();
             OnAppLateUpdate.SafeInvoke();
+            LateUpdateServices();
         }
 
         protected override void OnDisable()
