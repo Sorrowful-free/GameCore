@@ -2,7 +2,7 @@
 using GameCore.Core.UnityThreading;
 using UnityEngine;
 
-namespace GameCore.Core.Base
+namespace GameCore.Core.Base.Async
 {
     public static class UnityAsync 
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
+using GameCore.Core.Base.Async;
 using GameCore.Core.Extentions;
 using GameCore.Core.UnityThreading;
 using UnityEngine;
@@ -27,15 +28,15 @@ namespace GameCore.Core.Services.Resources
             Path = path;
         }
 
-        public void Load(Action<TAsset> onLoadComplete)
+        public void Load(Action<TAsset> onLoad)
         {
             if (Asset != null && IsLoaded)
             {
-                onLoadComplete.SafeInvoke(Asset);
+                onLoad.SafeInvoke(Asset);
                 return;
             }
 
-            InternalOnLoadComplete += onLoadComplete;
+            InternalOnLoadComplete += onLoad;
             if (_coroutine == null)
                 _coroutine = LoadResource((asset) =>
                 {
@@ -48,6 +49,11 @@ namespace GameCore.Core.Services.Resources
             
         }
 
+        public AwaitableOperation<TAsset> Load()
+        {
+            return new AwaitableOperation<TAsset>(Load);
+        }
+
         private void StopLoading()
         {
             if (_coroutine != null)
@@ -56,22 +62,22 @@ namespace GameCore.Core.Services.Resources
                 _coroutine = null;
             }
         }
-
-        public void Dispose()
+        
+        public void Unload(Action onUnload)
         {
-            OnDisposed();
+            OnUnload();
             StopLoading();
             Asset = null;
             IsLoaded = false;
+            onUnload.SafeInvoke();
         }
-       
 
-        protected abstract IEnumerator LoadResource(Action<TAsset> onLoadComplete);
-        protected abstract void OnDisposed();
-
-        public IAwaiter<TAsset> GetAwaiter()
+        public AwaitableOperation Unload()
         {
-            return new CallbackAwaiter<TAsset>(Load);
+            return new AwaitableOperation(Unload);
         }
+        
+        protected abstract IEnumerator LoadResource(Action<TAsset> onLoadComplete);
+        protected abstract void OnUnload();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
+using GameCore.Core.Base.Async;
 using GameCore.Core.Extentions;
 using GameCore.Core.UnityThreading;
 using UnityEngine;
@@ -13,7 +14,8 @@ namespace GameCore.Core.Services.Resources.Scenes
         public SceneInfo Info { get; private set; }
         public bool IsLoaded { get; protected set; }
 
-        private Coroutine _coroutine;
+        private Coroutine _loadCoroutine;
+        private Coroutine _unloadCoroutine;
 
         public BaseSceneResource(SceneInfo info)
         {
@@ -22,31 +24,42 @@ namespace GameCore.Core.Services.Resources.Scenes
 
         public void LoadScene(Action onSceneLoadComplete)
         {
-            _coroutine = StartLoading(onSceneLoadComplete).StartAsCoroutine();
+            _loadCoroutine = StartLoading(onSceneLoadComplete).StartAsCoroutine();
         }
         
         protected abstract IEnumerator StartLoading(Action onSceneLoadComplete);
 
-        protected virtual void OnDispose()
+        protected virtual void OnUnload()
         {
             
         }
-        public void Dispose()
+
+        public void Unload(Action onUnload)
         {
-            if (_coroutine != null)
+            _unloadCoroutine = AsyncUnload(onUnload).StartAsCoroutine();
+        }
+
+        private IEnumerator AsyncUnload(Action onUnload)
+        {
+            if (_loadCoroutine != null)
             {
-                _coroutine.StopCoroutine();
-                _coroutine = null;
+                _loadCoroutine.StopCoroutine();
+                _loadCoroutine = null;
             }
-            SceneManager.UnloadScene(Info.Name);
-            OnDispose();
+            yield return SceneManager.UnloadSceneAsync(Info.Name);
+            OnUnload();
+            onUnload.SafeInvoke();
+            if (_unloadCoroutine != null)
+            {
+                _unloadCoroutine.StopCoroutine();
+                _unloadCoroutine = null;
+            }
+                
         }
 
-        public IAwaiter GetAwaiter()
+        public AwaitableOperation Unload()
         {
-            return new CallbackAwaiter(LoadScene);
+            return new AwaitableOperation(Unload);
         }
-
-
     }
 }

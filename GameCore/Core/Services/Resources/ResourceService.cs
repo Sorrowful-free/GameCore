@@ -88,24 +88,42 @@ namespace GameCore.Core.Services.Resources
 
         public void DisposeAsset(int id)
         {
-            _assets[id].Dispose();
+            if (_assets.ContainsKey(id))
+            {
+                _assets[id].Unload();
+                _assets.Remove(id);
+            }
         }
 
         public void DisposeBundle(int id)
         {
-            _bundles[id].Dispose();
+            if (_bundles.ContainsKey(id))
+            {
+                _bundles[id].Unload();
+                _bundles.Remove(id);
+            }
         }
+
+        public void DisposeScene(int id)
+        {
+            if (_scenes.ContainsKey(id))
+            {
+                _scenes[id].Unload();
+                _scenes.Remove(id);
+            }
+        }
+
         public void Clear()
         {
             foreach (var resource in _assets.Values)
             {
-                resource.Dispose();
+                resource.Unload();
             }
             _assets.Clear();
 
             foreach (var bundle in _bundles.Values)
             {
-                bundle.Dispose();
+                bundle.Unload();
             }
             _bundles.Clear();
         }
@@ -144,7 +162,7 @@ namespace GameCore.Core.Services.Resources
             var percentPerBundle = 1.0f/(float) ids.Length;
             foreach (var bundlesId in ids)
             {
-                await GetBundle(bundlesId);
+                await GetBundle(bundlesId).Load();
                 progress += percentPerBundle;
                 onProgress.SafeInvoke(progress);
             }

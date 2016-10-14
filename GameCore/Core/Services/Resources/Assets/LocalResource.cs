@@ -10,7 +10,7 @@ namespace GameCore.Core.Services.Resources.Assets
         {
         }
 
-        protected override void OnDisposed()
+        protected override void OnUnload()
         {
             if (IsLoaded)
             {

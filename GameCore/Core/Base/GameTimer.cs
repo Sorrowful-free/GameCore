@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
+using GameCore.Core.Base.Async;
 using GameCore.Core.Extentions;
 using GameCore.Core.UnityThreading;
 using UnityEngine;

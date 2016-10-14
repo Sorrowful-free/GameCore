@@ -31,10 +31,10 @@ namespace GameCore.Core.Services.Resources.Scenes
             yield return operation;
         }
 
-        protected override void OnDispose()
+        protected override void OnUnload()
         {
-            base.OnDispose();
-            _bundle.Dispose();
+            base.OnUnload();
+            _bundle.Unload();
             if (_scenetCoroutine != null)
             {
                 _scenetCoroutine.StopCoroutine();

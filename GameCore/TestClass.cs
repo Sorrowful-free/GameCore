@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using GameCore.Core.Application;
 using GameCore.Core.Base;
+using GameCore.Core.Base.Async;
+using GameCore.Core.Services.Resources;
 using GameCore.Core.Services.UI;
 using GameCore.Core.Services.UI.Layers.Info;
 using GameCore.Core.UnityThreading;
@@ -56,6 +58,8 @@ namespace GameCore
           
             StackTracePrint();
 
+            var rs = default(ResourceService);
+            var res = rs.GetAsset<Sprite>(0);
 
 
 

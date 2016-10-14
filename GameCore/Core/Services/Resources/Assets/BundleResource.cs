@@ -8,16 +8,16 @@ namespace GameCore.Core.Services.Resources.Assets
 {
     public class BundleResource<TAsset> : BaseResource<AssetInfo,TAsset> where TAsset : Object
     {
-        private readonly IResource<BundleInfo, AssetBundle> _assetBundleResource;
+        private readonly IResource<BundleInfo, AssetBundle> _bundle;
         private Coroutine _coroutine;
-        public BundleResource(AssetInfo info, string path, IResource<BundleInfo,AssetBundle> assetBundleResource) : base(info, path)
+        public BundleResource(AssetInfo info, string path, IResource<BundleInfo,AssetBundle> bundle) : base(info, path)
         {
-            _assetBundleResource = assetBundleResource;
+            _bundle = bundle;
         }
 
         protected override IEnumerator LoadResource(Action<TAsset> onLoadComplete)
         {
-            _assetBundleResource.Load((bundle) =>
+            _bundle.Load((bundle) =>
             {
                _coroutine = LoadResourceFromAssetBundle(bundle, onLoadComplete).StartAsCoroutine();
             });
@@ -33,9 +33,9 @@ namespace GameCore.Core.Services.Resources.Assets
             onLoadComplete((TAsset)assetOperation.asset);
         }
 
-        protected override void OnDisposed()
+        protected override void OnUnload()
         {
-            _assetBundleResource.Dispose();
+            _bundle.Unload();
         }
     }
 }

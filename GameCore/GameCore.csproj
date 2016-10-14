@@ -57,6 +57,7 @@
     <Compile Include="Core\Application\Interfaces\Services\IPauseService.cs" />
     <Compile Include="Core\Application\Interfaces\Services\IService.cs" />
     <Compile Include="Core\Application\Interfaces\Services\IUpdateService.cs" />
+    <Compile Include="Core\Base\Async\AwaitableOperation.cs" />
     <Compile Include="Core\Base\Dependency\Attributes\PlatformDependencAttribute.cs" />
     <Compile Include="Core\Base\Dependency\DependencyInjectionExtention.cs" />
     <Compile Include="Core\Base\GameTimer.cs" />
@@ -64,8 +65,8 @@
     <Compile Include="Core\Base\StateMachines\IState.cs" />
     <Compile Include="Core\Base\Dependency\DependencyInjector.cs" />
     <Compile Include="Core\Base\StateMachines\StateContainer.cs" />
-    <Compile Include="Core\Base\CallbackAwaiter.cs" />
-    <Compile Include="Core\Base\UnityAsync.cs" />
+    <Compile Include="Core\Base\Async\CallbackAwaiter.cs" />
+    <Compile Include="Core\Base\Async\UnityAsync.cs" />
     <Compile Include="Core\Extentions\TypeExtention.cs" />
     <Compile Include="Core\Logging\Log.cs" />
     <Compile Include="Core\Services\GameState\GameStateService.cs" />

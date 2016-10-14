@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using GameCore.Core.Extentions;
 
-namespace GameCore.Core.Extentions
+namespace GameCore.Core.Base.Async
 {
     public class CallbackAwaiter : IAwaiter
     {
@@ -25,7 +26,6 @@ namespace GameCore.Core.Extentions
         {
             _method.SafeInvoke(() =>
             {
-              
                 _isCompleted = true;
                 continuation.SafeInvoke();
             });

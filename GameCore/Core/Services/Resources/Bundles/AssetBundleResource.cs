@@ -22,7 +22,7 @@ namespace GameCore.Core.Services.Resources.Bundles
         }
 
 
-        protected override void OnDisposed()
+        protected override void OnUnload()
         {
             if (IsLoaded)
             {

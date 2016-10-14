@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using GameCore.Core.Application.Interfaces.Services;
 using GameCore.Core.Base;
+using GameCore.Core.Base.Async;
 using GameCore.Core.UnityThreading;
 using UnityEngine;
 
