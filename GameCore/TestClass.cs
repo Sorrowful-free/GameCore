@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using GameCore.Core.Application;
 using GameCore.Core.Base;
 using GameCore.Core.Base.Async;
+using GameCore.Core.Extentions;
 using GameCore.Core.Services.Resources;
 using GameCore.Core.Services.UI;
 using GameCore.Core.Services.UI.Layers.Info;
@@ -73,11 +74,9 @@ namespace GameCore
         {
             Debug.Log(StackTraceUtility.ExtractStackTrace());
         }
-        private async Task TestExecute()
+        private async Task<int> TestExecute()
         {
-
-            await Task.Delay(0);
-            Debug.Log("exception");
+            return await new AwaitableOperation<int>((a) =>a.SafeInvoke(0));
         }
         
       

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using GameCore.Core.Base.Async;
 using Object = UnityEngine.Object;
 

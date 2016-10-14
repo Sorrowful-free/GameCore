@@ -49,8 +49,6 @@ namespace GameCore.Core.Application
             }
         }
 
-
-
         public static async Task<TService> InitializeService<TService>() where TService : IService
         {
             return (TService)await InitializeService(typeof(TService));
@@ -61,7 +59,6 @@ namespace GameCore.Core.Application
             var service = default(IService);
             if (!_services.TryGetValue(serviceType, out service))
             {
-
                 service = await CreateServiceInstance(serviceType);
                 if (service is IPauseService)
                 {
@@ -154,6 +151,5 @@ namespace GameCore.Core.Application
                 await UnityAsync.Destroy(component.gameObject);
             }
         }
-        
     }
 }

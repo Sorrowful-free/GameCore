@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace GameCore.Core.Base.Async
 {
-    public class AwaitableOperation:IAwaitable
+    public class AwaitableOperation : IAwaitable
     {
         private readonly Action<Action> _method;
 
