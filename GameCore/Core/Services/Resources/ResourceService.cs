@@ -126,6 +126,12 @@ namespace GameCore.Core.Services.Resources
                 bundle.Unload();
             }
             _bundles.Clear();
+
+            foreach (var scene in _scenes.Values)
+            {
+                scene.Unload();
+            }
+            _scenes.Clear();
         }
 
         public void Dispose()
