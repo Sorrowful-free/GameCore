@@ -1,10 +1,20 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using GameCore.Core.Application.Interfaces.Services;
 using GameCore.Core.Base.StateMachines;
 
 namespace GameCore.Core.Services.GameState
 {
-    public class GameStateService : BaseStateMachine<IBaseGameState> //todo iService
+    public class GameStateService : BaseStateMachine<IBaseGameState>, IService
     {
+        public async Task Initialize()
+        {
+        }
+
+        public async Task Deinitialize()
+        {
+        }
+
         protected override BaseStateContainer MakeContainer<TCurrentState>()
         {
             return new GameStateContainer(new TCurrentState());
@@ -13,6 +23,12 @@ namespace GameCore.Core.Services.GameState
         protected override BaseStateContainer MakeContainer<TCurrentState, TStateArgs>(TStateArgs arguments)
         {
             return new GameStateContainer<TStateArgs>(new TCurrentState(), arguments);
+        }
+
+        protected override BaseStateContainer MakeContainer(Type stateType)
+        {
+            var state = (IGameState)Activator.CreateInstance(stateType);
+            return new GameStateContainer(state);
         }
     }
 

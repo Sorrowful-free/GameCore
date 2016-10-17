@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
-using Assets.Scripts.Core.Extentions;
 using GameCore.Core.Base.Dependency.Attributes;
+using GameCore.Core.Extentions;
 using UnityEngine;
 
-namespace GameCore.Core
+namespace GameCore.Core.Base.Dependency
 {
     public static class DependencyInjector
     {
@@ -53,12 +53,27 @@ namespace GameCore.Core
 
         public static Type GetDependencyType(Type interfaceType)
         {
-            return AppDomain.CurrentDomain
-                    .GetAssemblies()
-                    .SelectMany(e => e.GetTypes())
-                    .FirstOrDefault(t => interfaceType.IsAssignableFrom(t) 
-                    && !t.IsInterface 
-                    && t.GetAttribute<PlatformDependencAttribute>()?.Platform == UnityEngine.Application.platform);
+            var type = AppDomain.CurrentDomain
+                .GetAssemblies()
+                .SelectMany(e => e.GetTypes())
+                .FirstOrDefault(t => interfaceType.IsAssignableFrom(t)
+                                     && !t.IsInterface
+                                     && CheckPlatformDependency(t));
+            if (type == null)
+            {
+                throw new AggregateException($"not found dependence for type {interfaceType.Name}");
+            }
+            return type;
+        }
+
+        private static bool CheckPlatformDependency(Type type)
+        {
+            var attribute = type.GetAttribute<PlatformDependencAttribute>();
+            if (attribute != null)
+            {
+                return attribute.Platform == UnityEngine.Application.platform;
+            }
+            return true;
         }
     }
 }

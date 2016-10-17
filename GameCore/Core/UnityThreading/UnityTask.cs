@@ -73,7 +73,7 @@ namespace GameCore.Core.UnityThreading
                     }
 
                 }
-                return _mainThreadFactory;
+                return _threadPoolFactory;
             }
         }
     }

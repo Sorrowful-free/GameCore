@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace GameCore.Core.Base.StateMachines
@@ -24,6 +25,13 @@ namespace GameCore.Core.Base.StateMachines
             await EnterToState(state);
         }
 
+        public async Task PushState(Type stateType)
+        {
+            var state = MakeContainer(stateType);
+            _statesContainersStack.Push(state);
+            await EnterToState(state);
+        }
+
         public async Task PopState()
         {
             await EnterToState(_statesContainersStack.Pop());
@@ -42,6 +50,13 @@ namespace GameCore.Core.Base.StateMachines
         {
             ClearStateStack();
             var state = MakeContainer<TCurrentState,TStateArgs>(arguments);
+            await EnterToState(state);
+        }
+
+        public async Task SetState(Type stateType)
+        {
+            ClearStateStack();
+            var state = MakeContainer(stateType);
             await EnterToState(state);
         }
 
@@ -73,5 +88,10 @@ namespace GameCore.Core.Base.StateMachines
             return new StateContainer<TStateArgs>(new TCurrentState(), arguments);
         }
 
+        protected virtual BaseStateContainer MakeContainer(Type stateType)
+        {
+            var state = (IState)Activator.CreateInstance(stateType);
+            return new StateContainer(state);
+        }
     }
 }

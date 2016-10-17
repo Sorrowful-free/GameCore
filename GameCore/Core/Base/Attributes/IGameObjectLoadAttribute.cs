@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using UnityEngine;
 
-namespace GameCore.Core.Services.UI.Attributes
+namespace GameCore.Core.Base.Attributes
 {
     
     public interface IGameObjectLoadAttribute

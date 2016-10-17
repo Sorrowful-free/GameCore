@@ -4,9 +4,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using GameCore.Core.Application.Interfaces.Services;
 using GameCore.Core.Extentions;
 using GameCore.Core.Services.Resources.Assets;
-using GameCore.Core.Services.Resources.Bundles;
 using GameCore.Core.Services.Resources.Scenes;
 using GameCore.Core.UnityThreading;
 using UnityEngine;
@@ -15,7 +15,7 @@ using Object = UnityEngine.Object;
 
 namespace GameCore.Core.Services.Resources
 {
-    public class ResourceService /*: IService*/
+    public class ResourceService : IService
     {
         
         private Dictionary<int, IBaseResource<AssetInfo>> _assets = new Dictionary<int, IBaseResource<AssetInfo>>();
@@ -27,9 +27,14 @@ namespace GameCore.Core.Services.Resources
 
         public ResourceTree ResourceTree { get; private set; }
 
-        public void Initialize()
+        public async Task Initialize()
         {
             ResourceTree = new ResourceTree();
+        }
+
+        public async Task Deinitialize()
+        {
+            Clear();
         }
 
         public BaseResource<AssetInfo, TAsset> GetAsset<TAsset>(int id) where TAsset:Object
@@ -54,7 +59,7 @@ namespace GameCore.Core.Services.Resources
             return (BaseResource<AssetInfo, TAsset>)resource;
         }
         
-        public BaseResource<BundleInfo,AssetBundle> GetBundle(int id)
+        public AssetBundleResource GetBundle(int id)
         {
             var bundle = default(IBaseResource<BundleInfo>);
             if (!_bundles.TryGetValue(id, out bundle))
@@ -64,7 +69,7 @@ namespace GameCore.Core.Services.Resources
                 bundle = new AssetBundleResource(bundleInfo, bundlePath);
                 _bundles.Add(id,bundle);
             }
-            return (BaseResource<BundleInfo, AssetBundle>)bundle;
+            return (AssetBundleResource)bundle;
         }
 
         public BaseSceneResource GetScene(int id)
@@ -134,11 +139,6 @@ namespace GameCore.Core.Services.Resources
             _scenes.Clear();
         }
 
-        public void Dispose()
-        {
-            Clear();
-        }
-
         public bool HasUpdates()
         {
             var hasUpdate = false;
@@ -173,5 +173,7 @@ namespace GameCore.Core.Services.Resources
                 onProgress.SafeInvoke(progress);
             }
         }
+
+       
     }
 }

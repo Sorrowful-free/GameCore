@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Assets.Scripts.Core.Extentions
+namespace GameCore.Core.Extentions
 {
     public static class TypeExtention
     {

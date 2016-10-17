@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Assets.Scripts.Core.Extentions;
 using GameCore.Core.Application.Interfaces.Services;
 using GameCore.Core.Base;
 using GameCore.Core.Base.Async;
-using GameCore.Core.Services.UI.Attributes;
+using GameCore.Core.Base.Attributes;
+using GameCore.Core.Extentions;
 using GameCore.Core.Services.UI.Layers;
 using GameCore.Core.Services.UI.Layers.Info;
 using GameCore.Core.Services.UI.View;

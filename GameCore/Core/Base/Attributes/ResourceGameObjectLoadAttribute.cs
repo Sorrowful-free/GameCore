@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using GameCore.Core.Services.UI.Attributes;
 using UnityEngine;
 
-namespace GameCore.Core.Attributes
+namespace GameCore.Core.Base.Attributes
 {
     public class ResourceGameObjectLoadAttribute :Attribute,IGameObjectLoadAttribute
     {
