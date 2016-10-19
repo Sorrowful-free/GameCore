@@ -17,7 +17,7 @@ using UnityEngine;
 
 namespace GameCore.Core.Services.UI
 {
-    public abstract class BaseUIService<TUILayerType> : BaseUIBehaviour , IService
+    public abstract class BaseUIService<TUILayerType> : BaseMonoBehaviour , IService
         where TUILayerType : struct
     {
         private readonly Dictionary<Type, BaseUIViewModel> _uiViewModelMap = new Dictionary<Type, BaseUIViewModel>();
@@ -33,7 +33,7 @@ namespace GameCore.Core.Services.UI
         protected async Task AddLayer(TUILayerType type, UILayerInfo layerInfo)
         {
             var layer = await UILayerFactory.CreateLayer(layerInfo, gameObject);
-            layer.RectTransfrom.SetParent(RectTransfrom);
+            layer.RectTransfrom.SetParent(Transfrom,false);
             _layersMap.Add(type, layer);
             layer.name = $"Layer{type}";
         }

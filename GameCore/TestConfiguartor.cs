@@ -9,7 +9,10 @@ namespace GameCore
     {
         public Type StartGameState { get { return typeof (TestGameState); } }
         public ReadOnlyCollection<Type> PredefinedServicesTypes {
-            get { return new ReadOnlyCollection<Type>(new List<Type>());}
+            get { return new ReadOnlyCollection<Type>(new List<Type>
+            {
+                typeof(TestUIService)
+            });}
         }
     }
 }
