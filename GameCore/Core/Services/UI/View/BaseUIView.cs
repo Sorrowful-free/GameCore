@@ -20,7 +20,7 @@ namespace GameCore.Core.Services.UI.View
 
         public async Task Deinitialize()
         {
-            OnDeinitialize();
+            await OnDeinitialize();
         }
 
         protected abstract Task OnDeinitialize();

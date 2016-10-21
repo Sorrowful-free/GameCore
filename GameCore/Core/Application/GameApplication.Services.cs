@@ -77,7 +77,6 @@ namespace GameCore.Core.Application
                 {
                     _lateUpdateServices.Add((ILateUpdateService)service);
                 }
-                
             }
             return service;
         }
@@ -89,6 +88,7 @@ namespace GameCore.Core.Application
 
         public static async Task DeinitializeService(Type serviceType)
         {
+
             var service = default(IService);
             if (_services.TryGetValue(serviceType, out service))
             {
@@ -108,7 +108,7 @@ namespace GameCore.Core.Application
                 {
                     _lateUpdateServices.Remove((ILateUpdateService)service);
                 }
-                DestroyServiceInstance(service);
+                await DestroyServiceInstance(service);
             }
         }
 
@@ -142,7 +142,7 @@ namespace GameCore.Core.Application
             return service;
         }
 
-        private static async void DestroyServiceInstance(IService service)
+        private static async Task DestroyServiceInstance(IService service)
         {
             var serviceType = service.GetType();
             await service.Deinitialize();

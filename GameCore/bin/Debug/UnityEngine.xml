@@ -20703,6 +20703,12 @@ GUILayout.MaxHeight, GUILayout.ExpandWidth, GUILayout.ExpandHeight.</param>
       </summary>
       <param name="style"></param>
     </member>
+    <member name="M:UnityEngine.Handheld.SetActivityIndicatorStyle(UnityEngine.TizenActivityIndicatorStyle)">
+      <summary>
+        <para>Sets the desired activity indicator style.</para>
+      </summary>
+      <param name="style"></param>
+    </member>
     <member name="M:UnityEngine.Handheld.StartActivityIndicator">
       <summary>
         <para>Starts os activity indicator.</para>
@@ -45272,7 +45278,7 @@ Returns NULL if there is no associated alpha texture for the source sprite. This
     </member>
     <member name="P:UnityEngine.Terrain.collectDetailPatches">
       <summary>
-        <para>Collect Detail patches from memory.</para>
+        <para>Collect detail patches from memory.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.Terrain.detailObjectDensity">
@@ -45470,6 +45476,41 @@ Returns NULL if there is no associated alpha texture for the source sprite. This
       </summary>
       <param name="properties"></param>
     </member>
+    <member name="T:UnityEngine.TerrainChangedFlags">
+      <summary>
+        <para>Indicate the types of changes to the terrain in OnTerrainChanged callback.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TerrainChangedFlags.DelayedHeightmapUpdate">
+      <summary>
+        <para>Indicates a change to the heightmap data without computing LOD.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TerrainChangedFlags.FlushEverythingImmediately">
+      <summary>
+        <para>Indicates that a change was made to the terrain that was so significant that the internal rendering data need to be flushed and recreated.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TerrainChangedFlags.Heightmap">
+      <summary>
+        <para>Indicates a change to the heightmap data.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TerrainChangedFlags.RemoveDirtyDetailsImmediately">
+      <summary>
+        <para>Indicates a change to the detail data.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TerrainChangedFlags.TreeInstances">
+      <summary>
+        <para>Indicates a change to the tree data.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TerrainChangedFlags.WillBeDestroyed">
+      <summary>
+        <para>Indicates that the TerrainData object is about to be destroyed.</para>
+      </summary>
+    </member>
     <member name="T:UnityEngine.TerrainCollider">
       <summary>
         <para>A heightmap based collider.</para>
@@ -45513,6 +45554,11 @@ Returns NULL if there is no associated alpha texture for the source sprite. This
     <member name="P:UnityEngine.TerrainData.baseMapResolution">
       <summary>
         <para>Resolution of the base map used for rendering far patches on the terrain.</para>
+      </summary>
+    </member>
+    <member name="P:UnityEngine.TerrainData.bounds">
+      <summary>
+        <para>The local bounding box of the TerrainData object.</para>
       </summary>
     </member>
     <member name="P:UnityEngine.TerrainData.detailHeight">
@@ -47037,6 +47083,36 @@ Returns NULL if there is no associated alpha texture for the source sprite. This
     <member name="P:UnityEngine.Tizen.Window.windowHandle">
       <summary>
         <para>Get pointer to the native window handle.</para>
+      </summary>
+    </member>
+    <member name="T:UnityEngine.TizenActivityIndicatorStyle">
+      <summary>
+        <para>Enumerator list of different indicator styles used on Handheld.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TizenActivityIndicatorStyle.DontShow">
+      <summary>
+        <para>Sets your game to not show any indicator while loading.</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TizenActivityIndicatorStyle.InversedLarge">
+      <summary>
+        <para>The loading indicator size is large and rotates counterclockwise (progress_large and inverted).</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TizenActivityIndicatorStyle.InversedSmall">
+      <summary>
+        <para>The loading indicator size is small and rotates counterclockwise (process_small and inverted).</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TizenActivityIndicatorStyle.Large">
+      <summary>
+        <para>The loading indicator size is large and rotates clockwise (progress_large).</para>
+      </summary>
+    </member>
+    <member name="F:UnityEngine.TizenActivityIndicatorStyle.Small">
+      <summary>
+        <para>The loading indicator size is small and rotates clockwise (process_small).</para>
       </summary>
     </member>
     <member name="T:UnityEngine.TooltipAttribute">

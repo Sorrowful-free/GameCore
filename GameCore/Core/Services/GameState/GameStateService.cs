@@ -9,6 +9,7 @@ namespace GameCore.Core.Services.GameState
     {
         public async Task Initialize()
         {
+            
         }
 
         public async Task Deinitialize()

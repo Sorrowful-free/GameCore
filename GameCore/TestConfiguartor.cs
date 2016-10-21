@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using GameCore.Core;
 using GameCore.Core.Application.Interfaces;
 
 namespace GameCore
@@ -11,7 +12,8 @@ namespace GameCore
         public ReadOnlyCollection<Type> PredefinedServicesTypes {
             get { return new ReadOnlyCollection<Type>(new List<Type>
             {
-                typeof(TestUIService)
+                typeof(TestUIService),
+                typeof(ITestService)
             });}
         }
     }

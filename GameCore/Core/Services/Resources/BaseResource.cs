@@ -46,7 +46,6 @@ namespace GameCore.Core.Services.Resources
                     IsLoaded = true;
                     StopLoading();
                 }).StartAsCoroutine();
-            
         }
 
         public AwaitableOperation<TAsset> Load()

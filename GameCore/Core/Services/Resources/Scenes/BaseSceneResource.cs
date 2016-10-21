@@ -22,9 +22,15 @@ namespace GameCore.Core.Services.Resources.Scenes
             Info = info;
         }
 
-        public void LoadScene(Action onSceneLoadComplete)
+        public void Load(Action onSceneLoadComplete)
         {
-            _loadCoroutine = StartLoading(onSceneLoadComplete).StartAsCoroutine();
+            if (_loadCoroutine == null)
+                _loadCoroutine = StartLoading(onSceneLoadComplete).StartAsCoroutine();
+        }
+
+        public AwaitableOperation Load()
+        {
+            return new AwaitableOperation(Load);
         }
         
         protected abstract IEnumerator StartLoading(Action onSceneLoadComplete);
@@ -36,7 +42,13 @@ namespace GameCore.Core.Services.Resources.Scenes
 
         public void Unload(Action onUnload)
         {
-            _unloadCoroutine = AsyncUnload(onUnload).StartAsCoroutine();
+            if(_unloadCoroutine == null)
+                _unloadCoroutine = AsyncUnload(onUnload).StartAsCoroutine();
+        }
+
+        public AwaitableOperation Unload()
+        {
+            return new AwaitableOperation(Unload);
         }
 
         private IEnumerator AsyncUnload(Action onUnload)
@@ -55,11 +67,6 @@ namespace GameCore.Core.Services.Resources.Scenes
                 _unloadCoroutine = null;
             }
                 
-        }
-
-        public AwaitableOperation Unload()
-        {
-            return new AwaitableOperation(Unload);
         }
     }
 }

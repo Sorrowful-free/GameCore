@@ -82,7 +82,7 @@ namespace GameCore.Core.Services.UI
             if (!_uiViewMap.TryGetValue(type, out uiView))
             {
                 var attribute = GetAttribute(typeof(TView));
-                var gameObject = await attribute.LoadViewGameObject();
+                var gameObject = await attribute.LoadGameObject();
                 var uiViewGameObject = await UnityAsync.Instantiate(gameObject);
                 uiView = uiViewGameObject.GetComponent<TView>();
                 _uiViewMap.Add(type,uiView);
@@ -119,7 +119,7 @@ namespace GameCore.Core.Services.UI
             var layer = _layersMap.FirstOrDefault(e => e.Value.ContainChild(view)).Value;
             layer.RemoveChild(view);
             await UnityAsync.Destroy(view.gameObject);
-            await attribute.UnloadViewGameObject();
+            await attribute.UnloadGameObject();
         }
 
         public async Task DestroyView(BaseUIViewModel model)
@@ -128,7 +128,6 @@ namespace GameCore.Core.Services.UI
             if (!_uiMap.TryGetValue(model, out uiView))
             {
                 throw new ArgumentException($"have no view for model {model}");
-                return;
             }
             if (_uiMap.ContainsKey(model))
             {

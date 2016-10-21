@@ -6,12 +6,12 @@ namespace GameCore.Core.Base.Attributes
 {
     public class ResourceGameObjectLoadAttribute :Attribute,IGameObjectLoadAttribute
     {
-        public Task<GameObject> LoadViewGameObject()
+        public Task<GameObject> LoadGameObject()
         {
             throw new NotImplementedException();
         }
 
-        public Task UnloadViewGameObject()
+        public Task UnloadGameObject()
         {
             throw new NotImplementedException();
         }

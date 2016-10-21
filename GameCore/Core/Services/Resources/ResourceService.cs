@@ -34,7 +34,7 @@ namespace GameCore.Core.Services.Resources
 
         public async Task Deinitialize()
         {
-            Clear();
+            await UnityTask.MainThreadFactory.StartNew(Clear);
         }
 
         public BaseResource<AssetInfo, TAsset> GetAsset<TAsset>(int id) where TAsset:Object
@@ -118,23 +118,23 @@ namespace GameCore.Core.Services.Resources
             }
         }
 
-        public void Clear()
+        public async Task Clear()
         {
             foreach (var resource in _assets.Values)
             {
-                resource.Unload();
+                await resource.Unload();
             }
             _assets.Clear();
 
             foreach (var bundle in _bundles.Values)
             {
-                bundle.Unload();
+                await bundle.Unload();
             }
             _bundles.Clear();
 
             foreach (var scene in _scenes.Values)
             {
-                scene.Unload();
+                await scene.Unload();
             }
             _scenes.Clear();
         }

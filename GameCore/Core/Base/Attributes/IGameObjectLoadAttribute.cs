@@ -6,8 +6,8 @@ namespace GameCore.Core.Base.Attributes
     
     public interface IGameObjectLoadAttribute
     {
-        Task<GameObject> LoadViewGameObject();
+        Task<GameObject> LoadGameObject();
 
-        Task UnloadViewGameObject();
+        Task UnloadGameObject();
     }
 }
