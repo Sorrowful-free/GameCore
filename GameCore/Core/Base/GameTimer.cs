@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace GameCore.Core.Base
 {
-    public struct GameTimer :IAwaitable
+    public struct GameTimer
     {
         private Coroutine _coroutine;
         private float _deltaTime;
@@ -44,6 +44,11 @@ namespace GameCore.Core.Base
             _coroutine = AsyncStart(onDone).StartAsCoroutine();
         }
 
+        public AwaitableOperation Start()
+        {
+            return new AwaitableOperation(Start);
+        }
+
         public void Stop()
         {
             _coroutine.StopCoroutine();
@@ -69,11 +74,6 @@ namespace GameCore.Core.Base
                 yield return 0;
             }
             onDone.SafeInvoke();
-        }
-
-        public IAwaiter GetAwaiter()
-        {
-            return new CallbackAwaiter(Start);
         }
     }
 }

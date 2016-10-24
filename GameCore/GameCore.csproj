@@ -118,9 +118,6 @@
     <Compile Include="TestGameState.cs" />
     <Compile Include="TestUIService.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) $(TargetPath)\..\..\..\..\Assets\Libraries\$(TargetName).dll</PostBuildEvent>

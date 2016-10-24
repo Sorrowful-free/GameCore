@@ -12,7 +12,6 @@ using GameCore.Core.Services.UI.Layers.Info;
 using GameCore.Core.Services.UI.View;
 using GameCore.Core.Services.UI.ViewModel;
 using GameCore.Core.UnityThreading;
-using UnityEngine;
 
 
 namespace GameCore.Core.Services.UI
