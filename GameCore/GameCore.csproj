@@ -75,7 +75,6 @@
     <Compile Include="Core\Services\GameObjectPool\GameObjectPoolService.cs" />
     <Compile Include="Core\Services\GameObjectPool\PoolableGameObject.cs" />
     <Compile Include="Core\Services\GameObjectPool\PoolableGameObjectStatus.cs" />
-    <Compile Include="ITestService.cs" />
     <Compile Include="Core\Logging\Log.cs" />
     <Compile Include="Core\Services\GameState\GameStateService.cs" />
     <Compile Include="Core\Services\GameState\IGameState.cs" />
@@ -98,7 +97,6 @@
     <Compile Include="Core\Services\UI\BaseUIService.cs" />
     <Compile Include="Core\Services\UI\ViewModel\BindingCommand.cs" />
     <Compile Include="Core\Services\UI\ViewModel\BindingProperty.cs" />
-    <Compile Include="TestService.cs" />
     <Compile Include="Core\UnityThreading\UnityMainThreadSynchronizationContext.cs" />
     <Compile Include="Core\UnityThreading\UnitySynchronizationContext.cs" />
     <Compile Include="Core\UnityThreading\UnityTask.cs" />
@@ -120,9 +118,6 @@
     <Compile Include="Core\UnityThreading\UnityThreadPoolSynchronizationContext.cs" />
     <Compile Include="Core\UnityThreading\UnityThreadWorker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestConfiguartor.cs" />
-    <Compile Include="TestGameState.cs" />
-    <Compile Include="TestUIService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
