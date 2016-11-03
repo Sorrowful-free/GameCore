@@ -1,19 +1,31 @@
 ﻿using System;
 using System.Threading.Tasks;
+using GameCore.Core.Application;
+using GameCore.Core.Services.Resources;
 using UnityEngine;
 
 namespace GameCore.Core.Base.Attributes
 {
+    [AttributeUsage(AttributeTargets.Class)]
     public class ResourceGameObjectLoadAttribute :Attribute,IGameObjectLoadAttribute
     {
-        public Task<GameObject> LoadGameObject()
+        private readonly int _id;
+
+        public ResourceGameObjectLoadAttribute(int id)
         {
-            throw new NotImplementedException();
+            _id = id;
         }
 
-        public Task UnloadGameObject()
+        public async Task<GameObject> LoadGameObject()
         {
-            throw new NotImplementedException();
+            var resourceService = await GameApplication.GetService<ResourceService>();
+            return await resourceService.GetAsset<GameObject>(_id).Load();
+        }
+
+        public async Task UnloadGameObject()
+        {
+            var resourceService = await GameApplication.GetService<ResourceService>();
+            await resourceService.GetAsset<GameObject>(_id).Unload();
         }
     }
 }

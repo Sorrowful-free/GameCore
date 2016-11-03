@@ -50,12 +50,12 @@ namespace GameCore.Core.Application
             }
         }
 
-        public static async Task<TService> InitializeService<TService>() where TService : IService
+        public static async Task<TService> GetService<TService>() where TService : IService
         {
-            return (TService)await InitializeService(typeof(TService));
+            return (TService)await GetService(typeof(TService));
         }
 
-        public static async Task<IService> InitializeService(Type serviceType)
+        public static async Task<IService> GetService(Type serviceType)
         {
             var service = default(IService);
             if (!_services.TryGetValue(serviceType, out service))
@@ -81,12 +81,12 @@ namespace GameCore.Core.Application
             return service;
         }
 
-        public static Task DeinitializeService<TService>() where TService : IService
+        public static Task DestroyService<TService>() where TService : IService
         {
-            return DeinitializeService(typeof (TService));
+            return DestroyService(typeof (TService));
         }
 
-        public static async Task DeinitializeService(Type serviceType)
+        public static async Task DestroyService(Type serviceType)
         {
 
             var service = default(IService);

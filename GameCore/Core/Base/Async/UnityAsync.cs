@@ -8,23 +8,19 @@ namespace GameCore.Core.Base.Async
     {
         public async static Task<TObject> Instantiate<TObject>(TObject original) where TObject : Object
         {
-            var task = new Task<TObject>(() => Object.Instantiate(original));
-            task.Start(UnityMainThreadTaskScheduler.Instance);
+            var task = UnityTask<TObject>.MainThreadFactory.StartNew(() => Object.Instantiate(original));
             return await task;
         }
 
         public async static Task Destroy(Object obj)
         {
-            var task = new Task(() =>
+            var task = UnityTask.MainThreadFactory.StartNew(() =>
             {
                 if (UnityEngine.Application.isEditor)
                     Object.DestroyImmediate(obj);
                 else
                     Object.Destroy(obj);
-            }
-            
-            );
-            task.Start(UnityMainThreadTaskScheduler.Instance);
+            });
             await task;
         }
     }

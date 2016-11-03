@@ -1,6 +1,6 @@
 ﻿using GameCore.Core.Application.Interfaces.Services;
 
-namespace GameCore.Core
+namespace GameCore
 {
     public interface ITestService : IService
     {

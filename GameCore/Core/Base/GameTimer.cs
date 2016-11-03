@@ -11,19 +11,20 @@ namespace GameCore.Core.Base
     public struct GameTimer
     {
         private Coroutine _coroutine;
-        private float _deltaTime;
+        private float _currentTime;
         private bool _unscaledTime;
         private bool _isPaused;
+        private float _deltaTime;
         public bool IsPaused
         {
             get { return _isPaused; }
         }
 
-        public bool IsDone { get { return _deltaTime <= 0; } }
+        public bool IsDone { get { return _currentTime <= 0; } }
 
-        public float DeltaTime
+        public float CurrentTime
         {
-            get { return _deltaTime; }
+            get { return _currentTime; }
         }
 
         public bool UnscaledTime
@@ -31,16 +32,17 @@ namespace GameCore.Core.Base
             get { return _unscaledTime; }
         }
 
-        public GameTimer(float deltaTime,bool unscaledTime = false)
+        public GameTimer(float deltaTime, bool unscaledTime = false)
         {
             _coroutine = null;
-            _deltaTime = deltaTime;
+            _deltaTime = _currentTime = deltaTime;
             _unscaledTime = unscaledTime;
             _isPaused = false;
         }
 
         public void Start(Action onDone)
         {
+            _currentTime = _deltaTime;//перезапуск таймера
             _coroutine = AsyncStart(onDone).StartAsCoroutine();
         }
 
@@ -67,10 +69,10 @@ namespace GameCore.Core.Base
 
         private IEnumerator AsyncStart(Action onDone)
         {
-            while (_deltaTime>0)
+            while (_currentTime>0)
             {
                 if(_isPaused)
-                _deltaTime -= (_unscaledTime ? Time.unscaledTime : Time.deltaTime);
+                _currentTime -= (_unscaledTime ? Time.unscaledTime : Time.deltaTime);
                 yield return 0;
             }
             onDone.SafeInvoke();

@@ -1,9 +1,10 @@
-﻿using System.Diagnostics;
-using System.Threading.Tasks;
-using GameCore.Core.Application;
+﻿using System.Threading.Tasks;
+using GameCore.Core.Logging;
+using GameCore.Core.Services.GameObjectPool;
+using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace GameCore.Core
+namespace GameCore
 {
     public class TestService : ITestService
     {
@@ -18,7 +19,7 @@ namespace GameCore.Core
 
         public void Hello()
         {
-            Debug.Log("asds");
+            
         }
     }
 }

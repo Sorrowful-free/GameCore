@@ -78,5 +78,10 @@ namespace GameCore.Core.Services.Resources
         
         protected abstract IEnumerator LoadResource(Action<TAsset> onLoadComplete);
         protected abstract void OnUnload();
+
+        public static implicit operator TAsset(BaseResource<TInfo, TAsset> resource)
+        {
+            return resource.Asset;
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace GameCore
 
         public async Task EnterState()
         {
-            var service = await GameApplication.InitializeService<ITestService>();
+            var service = await GameApplication.GetService<ITestService>();
             service.Hello();
         }
 
