@@ -69,6 +69,9 @@
     <Compile Include="Core\Base\Async\CallbackAwaiter.cs" />
     <Compile Include="Core\Base\Async\UnityAsync.cs" />
     <Compile Include="Core\Extentions\TypeExtention.cs" />
+    <Compile Include="Core\Logging\DefaultLogAppender.cs" />
+    <Compile Include="Core\Logging\ILogAppender.cs" />
+    <Compile Include="Core\Logging\MultiplyLogAppender.cs" />
     <Compile Include="Core\Services\GameObjectPool\GameObjectPoolService.cs" />
     <Compile Include="Core\Services\GameObjectPool\PoolableGameObject.cs" />
     <Compile Include="Core\Services\GameObjectPool\PoolableGameObjectStatus.cs" />

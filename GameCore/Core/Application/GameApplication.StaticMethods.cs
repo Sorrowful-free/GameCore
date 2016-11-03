@@ -1,6 +1,7 @@
 ﻿using System;
 using GameCore.Core.Application.Interfaces;
 using GameCore.Core.Base.Dependency;
+using GameCore.Core.Logging;
 using GameCore.Core.Services.GameState;
 using GameCore.Core.Services.Resources;
 using UnityEngine;
@@ -37,7 +38,7 @@ namespace GameCore.Core.Application
             }
             catch (Exception ex)
             {
-                Debug.LogException(ex);   
+                Log.Exception(ex);
             }
         }
     }

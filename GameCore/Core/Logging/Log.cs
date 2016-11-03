@@ -1,6 +1,5 @@
 ﻿using System;
 using JetBrains.Annotations;
-using Debug = UnityEngine.Debug;
 
 namespace GameCore.Core.Logging
 {
@@ -44,87 +43,8 @@ namespace GameCore.Core.Logging
         {
             if (EnableLogs)
                 _logAppender.Exception(exception);
-        }
-    }
-
-    public interface ILogAppender
-    {
-        [StringFormatMethod("formatedString")]
-        void Info(string formatedString, params object[] parameters);
-
-        [StringFormatMethod("formatedString")]
-        void Warning(string formatedString, params object[] parameters);
-
-        [StringFormatMethod("formatedString")]
-        void Error(string formatedString, params object[] parameters);
-
-        void Exception(Exception exception);
-    }
-
-    public class MultiplyLogAppender : ILogAppender
-    {
-        private readonly ILogAppender[] _logAppender;
-
-        public MultiplyLogAppender(params ILogAppender[] logAppender)
-        {
-            _logAppender = logAppender;
-        }
-
-        public void Info(string formatedString, params object[] parameters)
-        {
-            foreach (var appender in _logAppender)
-            {
-                appender.Info(formatedString,parameters);
-            }
-        }
-
-        public void Warning(string formatedString, params object[] parameters)
-        {
-            foreach (var appender in _logAppender)
-            {
-                appender.Warning(formatedString, parameters);
-            }
-        }
-
-        public void Error(string formatedString, params object[] parameters)
-        {
-            foreach (var appender in _logAppender)
-            {
-                appender.Error(formatedString, parameters);
-            }
-        }
-
-        public void Exception(Exception exception)
-        {
-            foreach (var appender in _logAppender)
-            {
-                appender.Exception(exception);
-            }
-        }
-    }
-
-    public class DefaultLogAppender : ILogAppender
-    {
-        private readonly string _contextName;
-        
-        public void Info(string formatedString, params object[] parameters)
-        {
-            Debug.Log(string.Format(formatedString, parameters));
-        }
-
-        public void Warning(string formatedString, params object[] parameters)
-        {
-            Debug.LogWarningFormat(formatedString, parameters);
-        }
-
-        public void Error(string formatedString, params object[] parameters)
-        {
-            Debug.LogErrorFormat(formatedString, parameters);
-        }
-
-        public void Exception(Exception exception)
-        {
-            Debug.LogException(exception);
+            else
+                throw exception;
         }
     }
 }
