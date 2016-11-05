@@ -9,11 +9,11 @@ using UnityEngine;
 
 namespace GameCore.Core.Services.UI
 {
-    public class UIServiceResourceAttribute : Attribute,IGameObjectLoadAttribute
+    public class ResourceAttribute : Attribute,IGameObjectLoadAttribute
     {
         private readonly string _path;
         private GameObject _asset;
-        public UIServiceResourceAttribute(string path)
+        public ResourceAttribute(string path)
         {
             _path = path;
         }

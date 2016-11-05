@@ -22,8 +22,10 @@ namespace GameCore.Core.Services.Resources
         private Dictionary<int, IBaseResource<BundleInfo>> _bundles = new Dictionary<int, IBaseResource<BundleInfo>>();
         private Dictionary<int, IBaseResource<SceneInfo>> _scenes = new Dictionary<int, IBaseResource<SceneInfo>>();
 
-        public ReadOnlyCollection<int> AssetsIds { get { return new ReadOnlyCollection<int>(_assets.Keys.ToList());} }
-        public ReadOnlyCollection<int> BundlesIds { get { return new ReadOnlyCollection<int>(_bundles.Keys.ToList()); } }
+        public ReadOnlyCollection<int> AssetsIds { get { return _assets?.Keys?.ToList()?.AsReadOnly(); } }
+        public ReadOnlyCollection<int> BundlesIds { get { return _bundles?.Keys?.ToList()?.AsReadOnly(); } }
+
+        public ReadOnlyCollection<int> ScenesIds { get { return _scenes?.Keys?.ToList()?.AsReadOnly(); } }
 
         public ResourceTree ResourceTree { get; private set; }
 
