@@ -33,7 +33,6 @@ namespace GameCore.Core.Application
                 {
                     await GetService(serviceType);
                 }
-
                 await gameStateService.SetState(configurator.StartGameState);
             }
             catch (Exception ex)

@@ -5,8 +5,6 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameCore", "GameCore\GameCore.csproj", "{81512554-B2CA-4E20-AA5D-8B211062EE01}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGameCoreV2", "TestGameCoreV2\TestGameCoreV2.csproj", "{1009CAAA-1B1A-4345-B81D-2801B5BD73B7}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{81512554-B2CA-4E20-AA5D-8B211062EE01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81512554-B2CA-4E20-AA5D-8B211062EE01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81512554-B2CA-4E20-AA5D-8B211062EE01}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1009CAAA-1B1A-4345-B81D-2801B5BD73B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1009CAAA-1B1A-4345-B81D-2801B5BD73B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1009CAAA-1B1A-4345-B81D-2801B5BD73B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1009CAAA-1B1A-4345-B81D-2801B5BD73B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

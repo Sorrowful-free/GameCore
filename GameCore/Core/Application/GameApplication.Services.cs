@@ -5,6 +5,7 @@ using GameCore.Core.Application.Interfaces.Services;
 using GameCore.Core.Base;
 using GameCore.Core.Base.Async;
 using GameCore.Core.Base.Dependency;
+using GameCore.Core.Logging;
 using GameCore.Core.UnityThreading;
 using UnityEngine;
 
@@ -122,7 +123,7 @@ namespace GameCore.Core.Application
                         UnityTask<Type>.ThreadPoolFactory.StartNew(
                             () => DependencyInjector.GetDependencyType(serviceType));
             }
-
+            
             var service = default(IService);
             //check is unity component or not
             if (serviceType.IsSubclassOf(typeof (Component))) // unity huyunuty
@@ -138,6 +139,7 @@ namespace GameCore.Core.Application
             {
                 service = await UnityTask<IService>.ThreadPoolFactory.StartNew(() => (IService)Activator.CreateInstance(serviceType));
             }
+            Log.Error("service:{0},name:{1}", service, service?.GetType()?.Name);
             await service.Initialize();
             return service;
         }
