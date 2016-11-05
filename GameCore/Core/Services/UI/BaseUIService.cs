@@ -8,10 +8,10 @@ using GameCore.Core.Base.Async;
 using GameCore.Core.Base.Attributes;
 using GameCore.Core.Extentions;
 using GameCore.Core.Services.UI.Layers;
-using GameCore.Core.Services.UI.Layers.Info;
 using GameCore.Core.Services.UI.View;
 using GameCore.Core.Services.UI.ViewModel;
 using GameCore.Core.UnityThreading;
+using UnityEngine;
 
 
 namespace GameCore.Core.Services.UI
@@ -19,22 +19,27 @@ namespace GameCore.Core.Services.UI
     public abstract class BaseUIService<TUILayerType> : BaseMonoBehaviour , IService
         where TUILayerType : struct
     {
+        [SerializeField]
+        private List<UILayerInfo> _layersInfos;
         private readonly Dictionary<Type, BaseUIViewModel> _uiViewModelMap = new Dictionary<Type, BaseUIViewModel>();
         private readonly Dictionary<Type, BaseUIView> _uiViewMap = new Dictionary<Type, BaseUIView>();
         private readonly Dictionary<BaseUIViewModel, BaseUIView> _uiMap = new Dictionary<BaseUIViewModel, BaseUIView>();
         private readonly Stack<BaseUIView> _viewStack = new Stack<BaseUIView>();
         private readonly Dictionary<TUILayerType, UILayer> _layersMap = new Dictionary<TUILayerType, UILayer>();
 
-        public abstract Task Initialize();
-
-        public abstract Task Deinitialize();
-
-        protected async Task AddLayer(TUILayerType type, UILayerInfo layerInfo)
+        public async Task Initialize()
         {
-            var layer = await UILayerFactory.CreateLayer(layerInfo, gameObject);
-            layer.RectTransfrom.SetParent(Transfrom,false);
-            _layersMap.Add(type, layer);
-            layer.name = $"Layer{type}";
+            await UnityTask.MainThreadFactory.StartNew(() =>
+            {
+                foreach (var info in _layersInfos)
+                {
+                    _layersMap.Add((TUILayerType) (object) info.LayerNumber, info.Layer);
+                }
+            });
+        }
+
+        public async Task Deinitialize()
+        {
         }
 
         protected async Task RemoveLayer(TUILayerType type)
@@ -158,5 +163,13 @@ namespace GameCore.Core.Services.UI
         }
 
         
+    }
+
+    [Serializable]
+    public struct UILayerInfo
+    {
+        [Tooltip("num in enum\n for example:\n Ingame = 0")]
+        public int LayerNumber;
+        public UILayer Layer;
     }
 }

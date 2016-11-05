@@ -7,11 +7,11 @@ using UnityEngine;
 namespace GameCore.Core.Base.Attributes
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class ResourceGameObjectLoadAttribute :Attribute,IGameObjectLoadAttribute
+    public class ResourceByIdAttribute :Attribute,IGameObjectLoadAttribute
     {
         private readonly int _id;
 
-        public ResourceGameObjectLoadAttribute(int id)
+        public ResourceByIdAttribute(int id)
         {
             _id = id;
         }
