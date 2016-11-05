@@ -7,6 +7,7 @@ using GameCore.Core.Base;
 using GameCore.Core.Base.Async;
 using GameCore.Core.Base.Attributes;
 using GameCore.Core.Extentions;
+using GameCore.Core.Logging;
 using GameCore.Core.Services.UI.Layers;
 using GameCore.Core.Services.UI.View;
 using GameCore.Core.Services.UI.ViewModel;
@@ -36,10 +37,12 @@ namespace GameCore.Core.Services.UI
                     _layersMap.Add((TUILayerType) (object) info.LayerNumber, info.Layer);
                 }
             });
+            Log.Info("UIService<{0}> initialize", typeof(TUILayerType).Name);
         }
 
         public async Task Deinitialize()
         {
+            Log.Info("UIService<{0}> deinitialize",typeof(TUILayerType).Name);
         }
 
         protected async Task RemoveLayer(TUILayerType type)

@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using GameCore.Core.Application.Interfaces.Services;
 using GameCore.Core.Extentions;
+using GameCore.Core.Logging;
 using GameCore.Core.Services.Resources.Assets;
 using GameCore.Core.Services.Resources.Scenes;
 using GameCore.Core.UnityThreading;
@@ -24,7 +25,6 @@ namespace GameCore.Core.Services.Resources
 
         public ReadOnlyCollection<int> AssetsIds { get { return _assets?.Keys?.ToList()?.AsReadOnly(); } }
         public ReadOnlyCollection<int> BundlesIds { get { return _bundles?.Keys?.ToList()?.AsReadOnly(); } }
-
         public ReadOnlyCollection<int> ScenesIds { get { return _scenes?.Keys?.ToList()?.AsReadOnly(); } }
 
         public ResourceTree ResourceTree { get; private set; }
@@ -32,11 +32,13 @@ namespace GameCore.Core.Services.Resources
         public async Task Initialize()
         {
             ResourceTree = new ResourceTree();
+            Log.Info("ResourceService initialize");
         }
 
         public async Task Deinitialize()
         {
             await UnityTask.MainThreadFactory.StartNew(Clear);
+            Log.Info("ResourceService deinitialize");
         }
 
         public BaseResource<AssetInfo, TAsset> GetAsset<TAsset>(int id) where TAsset:Object

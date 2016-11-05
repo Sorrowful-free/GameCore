@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using GameCore.Core.Application.Interfaces.Services;
 using GameCore.Core.Base.StateMachines;
+using GameCore.Core.Logging;
 
 namespace GameCore.Core.Services.GameState
 {
@@ -9,11 +10,12 @@ namespace GameCore.Core.Services.GameState
     {
         public async Task Initialize()
         {
-            
+            Log.Info("GameStateService initialize");
         }
 
         public async Task Deinitialize()
         {
+            Log.Info("GameStateService deinitialize");
         }
 
         protected override BaseStateContainer MakeContainer<TCurrentState>()
