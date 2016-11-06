@@ -32,6 +32,7 @@ namespace GameCore.Core.Services.UI
         {
             await UnityTask.MainThreadFactory.StartNew(() =>
             {
+                if(_layersInfos != null)
                 foreach (var info in _layersInfos)
                 {
                     _layersMap.Add((TUILayerType) (object) info.LayerNumber, info.Layer);

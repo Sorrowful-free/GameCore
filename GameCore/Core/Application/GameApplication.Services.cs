@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using GameCore.Core.Application.Interfaces.Services;
 using GameCore.Core.Base;
 using GameCore.Core.Base.Async;
+using GameCore.Core.Base.Attributes;
 using GameCore.Core.Base.Dependency;
+using GameCore.Core.Extentions;
 using GameCore.Core.Logging;
 using GameCore.Core.UnityThreading;
 using UnityEngine;
@@ -128,18 +130,27 @@ namespace GameCore.Core.Application
             //check is unity component or not
             if (serviceType.IsSubclassOf(typeof (Component))) // unity huyunuty
             {
+                var attribute = serviceType.GetAttributeByInterface<IGameObjectLoadAttribute>();
+                var serviceGameObject = default(GameObject);
+                if (attribute != null)
+                {
+                    serviceGameObject = await UnityAsync.Instantiate(await attribute.LoadGameObject());
+                    attribute.UnloadGameObject();
+                }
+                else
+                {
+                    serviceGameObject = new GameObject(serviceType.Name);
+                }
                 service = await UnityTask<IService>.MainThreadFactory.StartNew(() =>
                 {
-                    var gameObject = new GameObject(serviceType.Name);
-                    gameObject.transform.SetParent(_instance.transform,false);
-                    return (IService)gameObject.AddComponent(serviceType);
+                    serviceGameObject.transform.SetParent(_instance.transform, false);
+                    return (IService)serviceGameObject.GetComponent(serviceType);
                 });
             }
             else
             {
                 service = await UnityTask<IService>.ThreadPoolFactory.StartNew(() => (IService)Activator.CreateInstance(serviceType));
             }
-            Log.Error("service:{0},name:{1}", service, service?.GetType()?.Name);
             await service.Initialize();
             return service;
         }

@@ -27,7 +27,7 @@ namespace GameCore.Core.Application
             {
                 new GameObject("GameApplication").AddComponent<GameApplication>();
                 var configurator = DependencyInjector.GetDependency<IGameInitializeConfigurator>();
-                await GetService<ResourceService>();
+                var resourceService = await GetService<ResourceService>();
                 var gameStateService = await GetService<GameStateService>();
                 foreach (var serviceType in configurator.PredefinedServicesTypes)
                 {

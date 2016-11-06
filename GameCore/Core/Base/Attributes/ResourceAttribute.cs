@@ -20,10 +20,15 @@ namespace GameCore.Core.Services.UI
 
         public async Task<GameObject> LoadGameObject()
         {
-           return await new AwaitableOperation<GameObject>((go) => AsyncLoad(go).StartAsCoroutine());
+            return await new AwaitableOperation<GameObject>(AsyncLoad);
         }
 
-        private IEnumerator AsyncLoad(Action<GameObject> callback)
+        private void AsyncLoad(Action<GameObject> callback)
+        {
+            UnityTask.MainThreadFactory.StartNew(() => InternalAsyncLoad(callback).StartAsCoroutine());
+        }
+
+        private IEnumerator InternalAsyncLoad(Action<GameObject> callback)
         {
             var res = UnityEngine.Resources.LoadAsync<GameObject>(_path);
             yield return res;
