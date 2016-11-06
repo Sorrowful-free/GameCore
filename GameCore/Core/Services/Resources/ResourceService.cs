@@ -32,13 +32,11 @@ namespace GameCore.Core.Services.Resources
         public async Task Initialize()
         {
             ResourceTree = new ResourceTree();
-            Log.Info("ResourceService initialize");
         }
 
         public async Task Deinitialize()
         {
             await UnityTask.MainThreadFactory.StartNew(Clear);
-            Log.Info("ResourceService deinitialize");
         }
 
         public BaseResource<AssetInfo, TAsset> GetAsset<TAsset>(int id) where TAsset:Object

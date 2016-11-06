@@ -17,13 +17,11 @@ namespace GameCore.Core.Services.GameObjectPool
         public async Task Initialize()
         {
             _timer.Start(CheckObjects);
-            Log.Info("GameObjectPoolService initialize");
         }
 
         public async Task Deinitialize()
         {
             await UnityTask.MainThreadFactory.StartNew(Clear);
-            Log.Info("GameObjectPoolService deinitialize");
         }
 
         public async Task<PoolableGameObject> Instantiate(GameObject @object, float lifeTime = 3)

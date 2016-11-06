@@ -156,6 +156,7 @@ namespace GameCore.Core.Application
                 service = await UnityTask<IService>.ThreadPoolFactory.StartNew(() => (IService)Activator.CreateInstance(serviceType));
             }
             await service.Initialize();
+            Log.Info("[GameApplication]: {0} initialize", serviceType.Name);
             return service;
         }
 
@@ -168,6 +169,7 @@ namespace GameCore.Core.Application
                 var component = (Component) service;
                 await UnityAsync.Destroy(component.gameObject);
             }
+            Log.Info("[GameApplication]: {0} deinitialized", serviceType.Name);
         }
     }
 }

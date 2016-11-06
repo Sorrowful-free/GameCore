@@ -38,24 +38,10 @@ namespace GameCore.Core.Services.UI
                     _layersMap.Add((TUILayerType) (object) info.LayerNumber, info.Layer);
                 }
             });
-            Log.Info("UIService<{0}> initialize", typeof(TUILayerType).Name);
         }
 
         public async Task Deinitialize()
         {
-            Log.Info("UIService<{0}> deinitialize",typeof(TUILayerType).Name);
-        }
-
-        protected async Task RemoveLayer(TUILayerType type)
-        {
-            if (_layersMap.ContainsKey(type))
-            {
-                await UnityAsync.Destroy(_layersMap[type].gameObject);
-                await UnityTask.ThreadPoolFactory.StartNew(() =>
-                {
-                    _layersMap.Remove(type);
-                });
-            }
         }
 
         public async Task<TView> PushView<TView>(TUILayerType layerType) where TView : BaseUIView

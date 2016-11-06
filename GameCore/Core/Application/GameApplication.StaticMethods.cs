@@ -2,6 +2,7 @@
 using GameCore.Core.Application.Interfaces;
 using GameCore.Core.Base.Dependency;
 using GameCore.Core.Logging;
+using GameCore.Core.Services.GameObjectPool;
 using GameCore.Core.Services.GameState;
 using GameCore.Core.Services.Resources;
 using UnityEngine;
@@ -27,7 +28,8 @@ namespace GameCore.Core.Application
             {
                 new GameObject("GameApplication").AddComponent<GameApplication>();
                 var configurator = DependencyInjector.GetDependency<IGameInitializeConfigurator>();
-                var resourceService = await GetService<ResourceService>();
+                await GetService<ResourceService>();
+                await GetService<GameObjectPoolService>();
                 var gameStateService = await GetService<GameStateService>();
                 foreach (var serviceType in configurator.PredefinedServicesTypes)
                 {

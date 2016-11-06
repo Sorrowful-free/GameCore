@@ -10,12 +10,10 @@ namespace GameCore.Core.Services.GameState
     {
         public async Task Initialize()
         {
-            Log.Info("GameStateService initialize");
         }
 
         public async Task Deinitialize()
         {
-            Log.Info("GameStateService deinitialize");
         }
 
         protected override BaseStateContainer MakeContainer<TCurrentState>()
