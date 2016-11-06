@@ -71,13 +71,9 @@ namespace GameCore.Core.Services.Resources
             var directoriPath = "";
             if (_resourceDirectories.TryGetValue(id, out dir))
             {
-                directoriPath =  GetDirectoryPath(dir.ParentId) +dir.Directory ;
+                directoriPath =  Path.Combine(GetDirectoryPath(dir.ParentId), dir.Directory );
             }
-            else
-            {
-                directoriPath = dir.Directory;
-            }
-            return directoriPath + Path.DirectorySeparatorChar;
+            return directoriPath;
         }
 
         public string GetAssetPath(int id)
@@ -85,7 +81,7 @@ namespace GameCore.Core.Services.Resources
             var asset = default(AssetInfo);
             if (_assets.TryGetValue(id, out asset))
             {
-                return GetDirectoryPath(asset.DirectoryId) + asset.Name;
+                return Path.Combine(GetDirectoryPath(asset.DirectoryId),asset.Name);
             }
             return "";
         }
@@ -105,7 +101,7 @@ namespace GameCore.Core.Services.Resources
             var bundle = default(BundleInfo);
             if (_bundles.TryGetValue(id, out bundle))
             {
-                return GetDirectoryPath(bundle.DirectoryId)  + bundle.Name;
+                return Path.Combine(GetDirectoryPath(bundle.DirectoryId), bundle.Name);
             }
             return "";
         }
@@ -143,33 +139,33 @@ namespace GameCore.Core.Services.Resources
     
     public struct DirectoryInfo
     {
-        public int Id;
-        public int ParentId;
-        public string Directory;
+        public int Id { get; set; }
+        public int ParentId { get; set; }
+        public string Directory { get; set; }
     }
 
     public struct AssetInfo
     {
-        public int Id;
-        public int DirectoryId;
-        public int BundleId;
-        public string Name;
+        public int Id { get; set; }
+        public int DirectoryId { get; set; }
+        public int BundleId { get; set; }
+        public string Name { get; set; }
     }
 
     public struct BundleInfo
     {
-        public int Id;
-        public int DirectoryId;
-        public int Version;
-        public string Name;
-        public int Size;
+        public int Id { get; set; }
+        public int DirectoryId { get; set; }
+        public int Version { get; set; }
+        public string Name { get; set; }
+        public int Size { get; set; }
     }
 
     public struct SceneInfo
     {
-        public int Id;
-        public int BundleId;
-        public string Name;
-        public LoadSceneMode LoadSceneMode;
+        public int Id { get; set; }
+        public int BundleId { get; set; }
+        public string Name { get; set; }
+        public LoadSceneMode LoadSceneMode { get; set; }
     }
 }

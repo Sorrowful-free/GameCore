@@ -80,6 +80,7 @@ namespace GameCore.Core.Application
                 {
                     _lateUpdateServices.Add((ILateUpdateService)service);
                 }
+                _services.Add(serviceType,service);
             }
             return service;
         }
@@ -111,6 +112,7 @@ namespace GameCore.Core.Application
                 {
                     _lateUpdateServices.Remove((ILateUpdateService)service);
                 }
+                _services.Remove(serviceType);
                 await DestroyServiceInstance(service);
             }
         }

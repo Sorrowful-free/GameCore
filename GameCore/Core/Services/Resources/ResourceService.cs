@@ -47,7 +47,7 @@ namespace GameCore.Core.Services.Resources
                 var resInfo = ResourceTree.GetAssetInfo(id);
                 var resPath = ResourceTree.GetAssetPath(id);
                
-                if (resInfo.BundleId >= 0)
+                if (resInfo.BundleId > 0)
                 {
                     var assetBundle = GetBundle(resInfo.BundleId);
                     resource = new BundleResource<TAsset>(resInfo, resPath, assetBundle);
@@ -80,7 +80,7 @@ namespace GameCore.Core.Services.Resources
             if (!_scenes.TryGetValue(id, out scene))
             {
                 var sceneInfo = ResourceTree.GetSceneInfo(id);
-                if (sceneInfo.BundleId >= 0)
+                if (sceneInfo.BundleId > 0)
                 {
                     scene = new BundleSceneResource(sceneInfo,GetBundle(sceneInfo.BundleId));
                 }

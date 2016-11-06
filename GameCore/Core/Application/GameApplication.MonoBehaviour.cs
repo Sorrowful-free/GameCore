@@ -64,6 +64,7 @@ namespace GameCore.Core.Application
             OnAppLateUpdate.ClearAllHandlers();
             OnAppDisable.ClearAllHandlers();
             OnAppDestroy.ClearAllHandlers();
+            StopApplication();
         }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Linq;
 using GameCore.Core.Application.Interfaces;
 using GameCore.Core.Base.Dependency;
 using GameCore.Core.Logging;
 using GameCore.Core.Services.GameObjectPool;
 using GameCore.Core.Services.GameState;
 using GameCore.Core.Services.Resources;
+using GameCore.Core.UnityThreading;
 using UnityEngine;
 
 namespace GameCore.Core.Application
@@ -40,6 +42,14 @@ namespace GameCore.Core.Application
             catch (Exception ex)
             {
                 Log.Exception(ex);
+            }
+        }
+
+        private static async void StopApplication()
+        {
+            foreach (var service in _services.Keys.ToArray())
+            {
+                await DestroyService(service);
             }
         }
     }
