@@ -139,7 +139,11 @@ namespace GameCore.Core.Application
                 }
                 else
                 {
-                    serviceGameObject = new GameObject(serviceType.Name);
+                    serviceGameObject =
+                        await
+                            UnityTask<GameObject>.MainThreadFactory.StartNew(
+                                () => new GameObject(serviceType.Name, serviceType));
+
                 }
                 service = await UnityTask<IService>.MainThreadFactory.StartNew(() =>
                 {
