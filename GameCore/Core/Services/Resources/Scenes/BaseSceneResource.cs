@@ -58,7 +58,9 @@ namespace GameCore.Core.Services.Resources.Scenes
                 _loadCoroutine.StopCoroutine();
                 _loadCoroutine = null;
             }
-            yield return SceneManager.UnloadSceneAsync(Info.Name);
+            yield return 0;
+            SceneManager.UnloadScene(Info.Name);
+            yield return 0;
             OnUnload();
             onUnload.SafeInvoke();
             if (_unloadCoroutine != null)

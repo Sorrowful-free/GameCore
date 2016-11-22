@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Linq;
-using GameCore.Core.Application.Interfaces;
-using GameCore.Core.Base.Dependency;
+using System.Threading.Tasks;
 using GameCore.Core.Logging;
 using GameCore.Core.Services.GameObjectPool;
 using GameCore.Core.Services.GameState;
 using GameCore.Core.Services.Resources;
-using GameCore.Core.UnityThreading;
 using UnityEngine;
 
 namespace GameCore.Core.Application
@@ -23,21 +21,19 @@ namespace GameCore.Core.Application
             PauseServices(isPause);
         }
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        private static async void StartApplication()
+        public static async Task StartApplication(GameApplicationStartParameters startParams)
         {
             try
             {
                 new GameObject("GameApplication").AddComponent<GameApplication>();
-                var configurator = DependencyInjector.GetDependency<IGameInitializeConfigurator>();
                 await GetService<ResourceService>();
                 await GetService<GameObjectPoolService>();
                 var gameStateService = await GetService<GameStateService>();
-                foreach (var serviceType in configurator.PredefinedServicesTypes)
+                foreach (var serviceType in startParams.StartServicesTypes)
                 {
                     await GetService(serviceType);
                 }
-                await gameStateService.SetState(configurator.StartGameState);
+                await gameStateService.SetState(startParams.StartGameStateType);
             }
             catch (Exception ex)
             {

@@ -52,7 +52,8 @@
     <Compile Include="Core\Application\GameApplication.MonoBehaviour.cs" />
     <Compile Include="Core\Application\GameApplication.StaticMethods.cs" />
     <Compile Include="Core\Application\GameApplication.Services.cs" />
-    <Compile Include="Core\Application\Interfaces\IGameInitializeConfigurator.cs" />
+    <Compile Include="Core\Application\GameApplicationStarter.cs" />
+    <Compile Include="Core\Application\GameApplicationStartParameters.cs" />
     <Compile Include="Core\Application\Interfaces\Services\IFixedUpdateServices.cs" />
     <Compile Include="Core\Application\Interfaces\Services\ILateUpdateService.cs" />
     <Compile Include="Core\Application\Interfaces\Services\IPauseService.cs" />
