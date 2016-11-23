@@ -28,6 +28,7 @@ namespace GameCore.Core.Services.Resources.Scenes
         private IEnumerator AsyncLoadScene(Action onSceneLoadingComplete)
         {
             var operation = SceneManager.LoadSceneAsync(Info.Name, Info.LoadSceneMode);
+            Scene = SceneManager.GetSceneByName(Info.Name);
             yield return operation;
         }
 

@@ -13,6 +13,7 @@ namespace GameCore.Core.Services.Resources.Scenes
         protected override IEnumerator StartLoading(Action callback)
         {
             var operation = SceneManager.LoadSceneAsync(Info.Name, Info.LoadSceneMode);
+            Scene = SceneManager.GetSceneByName(Info.Name);
             yield return operation;
         }
 

@@ -12,6 +12,7 @@ namespace GameCore.Core.Services.Resources.Scenes
     public abstract class BaseSceneResource : IBaseResource<SceneInfo>
     {
         public SceneInfo Info { get; private set; }
+        public Scene Scene { get; protected set; }
         public bool IsLoaded { get; protected set; }
 
         private Coroutine _loadCoroutine;
