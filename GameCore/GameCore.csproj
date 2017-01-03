@@ -52,13 +52,12 @@
     <Compile Include="Core\Application\GameApplication.MonoBehaviour.cs" />
     <Compile Include="Core\Application\GameApplication.StaticMethods.cs" />
     <Compile Include="Core\Application\GameApplication.Services.cs" />
-    <Compile Include="Core\Application\GameApplicationStarter.cs" />
-    <Compile Include="Core\Application\GameApplicationStartParameters.cs" />
     <Compile Include="Core\Application\Interfaces\Services\IFixedUpdateServices.cs" />
     <Compile Include="Core\Application\Interfaces\Services\ILateUpdateService.cs" />
     <Compile Include="Core\Application\Interfaces\Services\IPauseService.cs" />
     <Compile Include="Core\Application\Interfaces\Services\IService.cs" />
     <Compile Include="Core\Application\Interfaces\Services\IUpdateService.cs" />
+    <Compile Include="Core\Application\GamePreloader.cs" />
     <Compile Include="Core\Base\Async\AwaitableOperation.cs" />
     <Compile Include="Core\Base\Dependency\Attributes\PlatformDependencAttribute.cs" />
     <Compile Include="Core\Base\Dependency\DependencyInjectionExtention.cs" />

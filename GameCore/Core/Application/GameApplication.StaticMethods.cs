@@ -21,19 +21,11 @@ namespace GameCore.Core.Application
             PauseServices(isPause);
         }
 
-        public static async Task StartApplication(GameApplicationStartParameters startParams)
+        public static async Task StartApplication()
         {
             try
             {
                 new GameObject("GameApplication").AddComponent<GameApplication>();
-                await GetService<ResourceService>();
-                await GetService<GameObjectPoolService>();
-                var gameStateService = await GetService<GameStateService>();
-                foreach (var serviceType in startParams.StartServicesTypes)
-                {
-                    await GetService(serviceType);
-                }
-                await gameStateService.SetState(startParams.StartGameStateType);
             }
             catch (Exception ex)
             {
