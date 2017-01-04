@@ -17,30 +17,42 @@ using UnityEngine;
 
 namespace GameCore.Core.Services.UI
 {
-    public abstract class BaseUIService<TUILayerType> : BaseMonoBehaviour , IService
+    public abstract class BaseUIService : BaseMonoBehaviour, IService
+    {
+        public abstract List<UILayerInfo> LayerInfos { get; }
+        public abstract Task Initialize();
+
+        public abstract Task Deinitialize();
+    }
+    public abstract class BaseUIService<TUILayerType> :BaseUIService
         where TUILayerType : struct
     {
-        [SerializeField]
-        private List<UILayerInfo> _layersInfos;
+        public override List<UILayerInfo> LayerInfos {
+            get { return _layersInfos; }
+        }
+
+        [SerializeField,HideInInspector]
+        private List<UILayerInfo> _layersInfos = new List<UILayerInfo>();
+
         private readonly Dictionary<Type, BaseUIViewModel> _uiViewModelMap = new Dictionary<Type, BaseUIViewModel>();
         private readonly Dictionary<Type, BaseUIView> _uiViewMap = new Dictionary<Type, BaseUIView>();
         private readonly Dictionary<BaseUIViewModel, BaseUIView> _uiMap = new Dictionary<BaseUIViewModel, BaseUIView>();
         private readonly Stack<BaseUIView> _viewStack = new Stack<BaseUIView>();
         private readonly Dictionary<TUILayerType, UILayer> _layersMap = new Dictionary<TUILayerType, UILayer>();
 
-        public async Task Initialize()
+        public override async Task Initialize()
         {
             await UnityTask.MainThreadFactory.StartNew(() =>
             {
                 if(_layersInfos != null)
                 foreach (var info in _layersInfos)
                 {
-                    _layersMap.Add((TUILayerType) (object) info.LayerNumber, info.Layer);
+                    _layersMap.Add((TUILayerType) (object) info.LayerType, info.Layer);
                 }
             });
         }
 
-        public async Task Deinitialize()
+        public override async Task Deinitialize()
         {
         }
 
@@ -151,15 +163,12 @@ namespace GameCore.Core.Services.UI
             }
             return attribute;
         }
-
-        
     }
 
     [Serializable]
-    public struct UILayerInfo
+    public class UILayerInfo
     {
-        [Tooltip("num in enum\n for example:\n Ingame = 0")]
-        public int LayerNumber;
+        public int LayerType;
         public UILayer Layer;
     }
 }

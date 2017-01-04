@@ -11,7 +11,7 @@ namespace GameCore.Core.Services.Resources.Bundles
 
         public AssetBundleResource(BundleInfo info, string path) : base(info, path)
         {
-            _needCache = !path.ToLower().Replace("\\", "/").Contains("file://");
+            _needCache = info.Version != 0;
         }
         
         protected override IEnumerator LoadResource(Action<AssetBundle> onLoadComplete)
@@ -20,7 +20,6 @@ namespace GameCore.Core.Services.Resources.Bundles
             yield return _www;
             onLoadComplete(_www.assetBundle);
         }
-
 
         protected override void OnUnload()
         {

@@ -16,7 +16,5 @@ namespace GameCore.Core.Services.Resources.Scenes
             Scene = SceneManager.GetSceneByName(Info.Name);
             yield return operation;
         }
-
-        
     }
 }

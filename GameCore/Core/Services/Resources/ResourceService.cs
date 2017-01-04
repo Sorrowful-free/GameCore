@@ -148,7 +148,7 @@ namespace GameCore.Core.Services.Resources
             {
                 var path = ResourceTree.GetBundlePath(bundlesId);
                 var bundleInfo = ResourceTree.GetBundleInfo(bundlesId);
-                var needCheck = !path.ToLower().Replace("\\", "/").Contains("file://"); // если файл не локальный то надо проверить на апдейт
+                var needCheck = bundleInfo.Version != 0; // если файл не локальный то надо проверить на апдейт
                 if (needCheck)
                 {
                     hasUpdate = hasUpdate || !Caching.IsVersionCached(path, bundleInfo.Version);
@@ -165,7 +165,7 @@ namespace GameCore.Core.Services.Resources
                     UnityTask<int[]>.ThreadPoolFactory.StartNew(
                         () =>
                             BundlesIds.Where(
-                                e => !ResourceTree.GetBundlePath(e).ToLower().Replace("\\", "/").Contains("file://"))
+                                e => ResourceTree.GetBundleInfo(e).Version != 0)
                                 .ToArray());
             var percentPerBundle = 1.0f/(float) ids.Length;
             foreach (var bundlesId in ids)

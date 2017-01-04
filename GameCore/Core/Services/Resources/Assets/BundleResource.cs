@@ -23,8 +23,6 @@ namespace GameCore.Core.Services.Resources.Assets
             });
             yield return 0;
         }
-
-        
         
         private IEnumerator LoadResourceFromAssetBundle(AssetBundle assetBundle,Action<TAsset> onLoadComplete)
         {

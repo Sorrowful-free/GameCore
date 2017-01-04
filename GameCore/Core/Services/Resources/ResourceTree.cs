@@ -71,7 +71,7 @@ namespace GameCore.Core.Services.Resources
             var directoriPath = "";
             if (_resourceDirectories.TryGetValue(id, out dir))
             {
-                directoriPath =  Path.Combine(GetDirectoryPath(dir.ParentId), dir.Directory );
+                directoriPath =  Path.Combine(GetDirectoryPath(dir.ParentId), dir.Name );
             }
             return directoriPath;
         }
@@ -141,7 +141,7 @@ namespace GameCore.Core.Services.Resources
     {
         public int Id { get; set; }
         public int ParentId { get; set; }
-        public string Directory { get; set; }
+        public string Name { get; set; }
     }
 
     public struct AssetInfo
