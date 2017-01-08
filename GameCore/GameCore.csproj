@@ -81,7 +81,7 @@
     <Compile Include="Core\Base\Attributes\ResourceByIdAttribute.cs" />
     <Compile Include="Core\Services\Resources\Scenes\BaseSceneResource.cs" />
     <Compile Include="Core\Services\Resources\Scenes\BundleSceneResource.cs" />
-    <Compile Include="Core\Services\Resources\Scenes\LoadSceneResource.cs" />
+    <Compile Include="Core\Services\Resources\Scenes\LocalSceneResource.cs" />
     <Compile Include="Core\Services\UI\Layers\UILayer.cs" />
     <Compile Include="Core\Base\Attributes\IGameObjectLoadAttribute.cs" />
     <Compile Include="Core\Base\Attributes\ResourceAttribute.cs" />
@@ -99,9 +99,9 @@
     <Compile Include="Core\Extentions\ActionExtention.cs" />
     <Compile Include="Core\Extentions\FuncExtention.cs" />
     <Compile Include="Core\Services\Resources\BaseResource.cs" />
-    <Compile Include="Core\Services\Resources\Assets\BundleResource.cs" />
-    <Compile Include="Core\Services\Resources\Bundles\AssetBundleResource.cs" />
-    <Compile Include="Core\Services\Resources\Assets\LocalResource.cs" />
+    <Compile Include="Core\Services\Resources\Assets\BundleAssetResource.cs" />
+    <Compile Include="Core\Services\Resources\Bundles\BundleResource.cs" />
+    <Compile Include="Core\Services\Resources\Assets\LocalAssetResource.cs" />
     <Compile Include="Core\Services\Resources\IResource.cs" />
     <Compile Include="Core\Services\Resources\ResourceService.cs" />
     <Compile Include="Core\Services\Resources\ResourceTree.cs" />

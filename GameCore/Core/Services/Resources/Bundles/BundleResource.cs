@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace GameCore.Core.Services.Resources.Bundles
 {
-    public class AssetBundleResource: BaseResource<BundleInfo, AssetBundle>
+    public class BundleResource: BaseResource<BundleInfo, AssetBundle>
     {
         private WWW _www;
         private readonly bool _needCache;
 
-        public AssetBundleResource(BundleInfo info, string path) : base(info, path)
+        public BundleResource(BundleInfo info, string path) : base(info, path)
         {
             _needCache = info.Version != 0;
         }

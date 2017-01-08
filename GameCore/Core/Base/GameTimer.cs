@@ -71,7 +71,7 @@ namespace GameCore.Core.Base
         {
             while (_currentTime>0)
             {
-                if(_isPaused)
+                if (!_isPaused)
                 _currentTime -= (_unscaledTime ? Time.unscaledTime : Time.deltaTime);
                 yield return 0;
             }

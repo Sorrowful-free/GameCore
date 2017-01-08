@@ -6,11 +6,11 @@ using Object = UnityEngine.Object;
 
 namespace GameCore.Core.Services.Resources.Assets
 {
-    public class BundleResource<TAsset> : BaseResource<AssetInfo,TAsset> where TAsset : Object
+    public class BundleAssetResource<TAsset> : BaseResource<AssetInfo,TAsset> where TAsset : Object
     {
         private readonly IResource<BundleInfo, AssetBundle> _bundle;
         private Coroutine _coroutine;
-        public BundleResource(AssetInfo info, string path, IResource<BundleInfo,AssetBundle> bundle) : base(info, path)
+        public BundleAssetResource(AssetInfo info, string path, IResource<BundleInfo,AssetBundle> bundle) : base(info, path)
         {
             _bundle = bundle;
         }

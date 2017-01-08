@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using UnityEngine.SceneManagement;
@@ -131,41 +132,82 @@ namespace GameCore.Core.Services.Resources
     //TODO add serialization
     public struct ResourcesInfo 
     {
-        public List<DirectoryInfo> ResourceDirectories;
-        public List<AssetInfo> Assets;
-        public List<BundleInfo> Bundles;
-        public List<SceneInfo> Scenes;
+        public ResourcesInfo(ReadOnlyCollection<DirectoryInfo> resourceDirectories, ReadOnlyCollection<BundleInfo> bundles, ReadOnlyCollection<AssetInfo> assets, ReadOnlyCollection<SceneInfo> scenes)
+        {
+            ResourceDirectories = resourceDirectories;
+            Bundles = bundles;
+            Assets = assets;
+            Scenes = scenes;
+        }
+
+        public ReadOnlyCollection<DirectoryInfo> ResourceDirectories { get; }
+        
+        public ReadOnlyCollection<BundleInfo> Bundles { get; }
+        public ReadOnlyCollection<AssetInfo> Assets { get; }
+        public ReadOnlyCollection<SceneInfo> Scenes { get; }
     }
     
     public struct DirectoryInfo
     {
-        public int Id { get; set; }
-        public int ParentId { get; set; }
-        public string Name { get; set; }
+        public DirectoryInfo(int id, int parentId, string name)
+        {
+            Id = id;
+            ParentId = parentId;
+            Name = name;
+        }
+
+        public int Id { get; }
+        public int ParentId { get; }
+        public string Name { get; }
     }
 
     public struct AssetInfo
     {
-        public int Id { get; set; }
-        public int DirectoryId { get; set; }
-        public int BundleId { get; set; }
-        public string Name { get; set; }
+        public AssetInfo(int id, int directoryId, int bundleId, string name)
+        {
+            Id = id;
+            DirectoryId = directoryId;
+            BundleId = bundleId;
+            Name = name;
+        }
+
+        public int Id { get; }
+        public int DirectoryId { get; }
+        public int BundleId { get; }
+        public string Name { get; }
     }
 
     public struct BundleInfo
     {
-        public int Id { get; set; }
-        public int DirectoryId { get; set; }
-        public int Version { get; set; }
-        public string Name { get; set; }
-        public int Size { get; set; }
+        public BundleInfo(int id, int directoryId, int version, string name, int size)
+        {
+            Id = id;
+            DirectoryId = directoryId;
+            Version = version;
+            Name = name;
+            Size = size;
+        }
+
+        public int Id { get; }
+        public int DirectoryId { get; }
+        public int Version { get; }
+        public string Name { get; }
+        public int Size { get;  }
     }
 
     public struct SceneInfo
     {
-        public int Id { get; set; }
-        public int BundleId { get; set; }
-        public string Name { get; set; }
-        public LoadSceneMode LoadSceneMode { get; set; }
+        public SceneInfo(int id, int bundleId, string name, LoadSceneMode loadSceneMode)
+        {
+            Id = id;
+            BundleId = bundleId;
+            Name = name;
+            LoadSceneMode = loadSceneMode;
+        }
+
+        public int Id { get; }
+        public int BundleId { get; }
+        public string Name { get; }
+        public LoadSceneMode LoadSceneMode { get; }
     }
 }

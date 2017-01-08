@@ -5,17 +5,27 @@ using System.Text;
 using System.Threading.Tasks;
 using GameCore.Core.Base;
 using GameCore.Core.Base.Async;
+using GameCore.Core.Logging;
 
 namespace GameCore.Core.Application
 {
     public abstract class GamePreloader : BaseMonoBehaviour
     {
-        protected override void Awake()
+
+        protected override void Start()
         {
-            base.Awake();
+            base.Start();
+            try
+            {
+                AsyncStart();
+            }
+            catch (Exception e)
+            {
+                Log.Exception(e);
+            }
         }
 
-        private async Task AsyncAwake()
+        private async Task AsyncStart()
         {
             await PreInitialize();
             await Initialize();

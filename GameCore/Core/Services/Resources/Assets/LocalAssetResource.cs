@@ -4,9 +4,9 @@ using Object = UnityEngine.Object;
 
 namespace GameCore.Core.Services.Resources.Assets
 {
-    public class LocalResource<TAsset> : BaseResource<AssetInfo,TAsset> where TAsset:Object
+    public class LocalAssetResource<TAsset> : BaseResource<AssetInfo,TAsset> where TAsset:Object
     {
-        public LocalResource(AssetInfo info, string path) : base(info, path)
+        public LocalAssetResource(AssetInfo info, string path) : base(info, path)
         {
         }
 

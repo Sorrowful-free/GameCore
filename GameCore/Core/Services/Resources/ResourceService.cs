@@ -8,10 +8,10 @@ using GameCore.Core.Application.Interfaces.Services;
 using GameCore.Core.Extentions;
 using GameCore.Core.Logging;
 using GameCore.Core.Services.Resources.Assets;
+using GameCore.Core.Services.Resources.Bundles;
 using GameCore.Core.Services.Resources.Scenes;
 using GameCore.Core.UnityThreading;
 using UnityEngine;
-using AssetBundleResource = GameCore.Core.Services.Resources.Bundles.AssetBundleResource;
 using Object = UnityEngine.Object;
 
 namespace GameCore.Core.Services.Resources
@@ -22,16 +22,17 @@ namespace GameCore.Core.Services.Resources
         private Dictionary<int, IBaseResource<AssetInfo>> _assets = new Dictionary<int, IBaseResource<AssetInfo>>();
         private Dictionary<int, IBaseResource<BundleInfo>> _bundles = new Dictionary<int, IBaseResource<BundleInfo>>();
         private Dictionary<int, IBaseResource<SceneInfo>> _scenes = new Dictionary<int, IBaseResource<SceneInfo>>();
+        private ResourceTree _resourceTree;
 
         public ReadOnlyCollection<int> AssetsIds { get { return _assets?.Keys?.ToList()?.AsReadOnly(); } }
         public ReadOnlyCollection<int> BundlesIds { get { return _bundles?.Keys?.ToList()?.AsReadOnly(); } }
         public ReadOnlyCollection<int> ScenesIds { get { return _scenes?.Keys?.ToList()?.AsReadOnly(); } }
 
-        public ResourceTree ResourceTree { get; private set; }
+        
 
         public async Task Initialize()
         {
-            ResourceTree = new ResourceTree();
+            _resourceTree = new ResourceTree();
         }
 
         public async Task Deinitialize()
@@ -39,39 +40,44 @@ namespace GameCore.Core.Services.Resources
             await UnityTask.MainThreadFactory.StartNew(Clear);
         }
 
+        public void InitializeResourceTree(ResourcesInfo resourcesInfo)
+        {
+            _resourceTree.InitializeResourceData(resourcesInfo);
+        }
+
         public BaseResource<AssetInfo, TAsset> GetAsset<TAsset>(int id) where TAsset:Object
         {
             var resource = default(IBaseResource<AssetInfo>);
             if (!_assets.TryGetValue(id, out resource))
             {
-                var resInfo = ResourceTree.GetAssetInfo(id);
-                var resPath = ResourceTree.GetAssetPath(id);
+                var resInfo = _resourceTree.GetAssetInfo(id);
+                var resPath = _resourceTree.GetAssetPath(id);
                
                 if (resInfo.BundleId > 0)
                 {
                     var assetBundle = GetBundle(resInfo.BundleId);
-                    resource = new BundleResource<TAsset>(resInfo, resPath, assetBundle);
+                    resource = new BundleAssetResource<TAsset>(resInfo, resPath, assetBundle);
                 }
                 else
                 {
-                    resource = new LocalResource<TAsset>(resInfo, resPath);
+                    resource = new LocalAssetResource<TAsset>(resInfo, resPath);
                 }
                 _assets.Add(id,resource);
             }
             return (BaseResource<AssetInfo, TAsset>)resource;
         }
         
-        public AssetBundleResource GetBundle(int id)
+        public BundleResource GetBundle(int id)
         {
             var bundle = default(IBaseResource<BundleInfo>);
             if (!_bundles.TryGetValue(id, out bundle))
             {
-                var bundleInfo = ResourceTree.GetBundleInfo(id);
-                var bundlePath = ResourceTree.GetBundlePath(id);
-                bundle = new AssetBundleResource(bundleInfo, bundlePath);
+                var bundleInfo = _resourceTree.GetBundleInfo(id);
+                var bundlePath = _resourceTree.GetBundlePath(id);
+                bundle = new BundleResource(bundleInfo, bundlePath);
                 _bundles.Add(id,bundle);
             }
-            return (AssetBundleResource)bundle;
+            return (BundleResource)bundle;
         }
 
         public BaseSceneResource GetScene(int id)
@@ -79,14 +85,14 @@ namespace GameCore.Core.Services.Resources
             var scene = default(IBaseResource<SceneInfo>);
             if (!_scenes.TryGetValue(id, out scene))
             {
-                var sceneInfo = ResourceTree.GetSceneInfo(id);
+                var sceneInfo = _resourceTree.GetSceneInfo(id);
                 if (sceneInfo.BundleId > 0)
                 {
                     scene = new BundleSceneResource(sceneInfo,GetBundle(sceneInfo.BundleId));
                 }
                 else
                 {
-                    scene = new LoadSceneResource(sceneInfo);
+                    scene = new LocalSceneResource(sceneInfo);
                 }
                 _scenes.Add(id, scene);
             }
@@ -146,8 +152,8 @@ namespace GameCore.Core.Services.Resources
             var hasUpdate = false;
             foreach (var bundlesId in BundlesIds)
             {
-                var path = ResourceTree.GetBundlePath(bundlesId);
-                var bundleInfo = ResourceTree.GetBundleInfo(bundlesId);
+                var path = _resourceTree.GetBundlePath(bundlesId);
+                var bundleInfo = _resourceTree.GetBundleInfo(bundlesId);
                 var needCheck = bundleInfo.Version != 0; // если файл не локальный то надо проверить на апдейт
                 if (needCheck)
                 {
@@ -165,7 +171,7 @@ namespace GameCore.Core.Services.Resources
                     UnityTask<int[]>.ThreadPoolFactory.StartNew(
                         () =>
                             BundlesIds.Where(
-                                e => ResourceTree.GetBundleInfo(e).Version != 0)
+                                e => _resourceTree.GetBundleInfo(e).Version != 0)
                                 .ToArray());
             var percentPerBundle = 1.0f/(float) ids.Length;
             foreach (var bundlesId in ids)

@@ -18,13 +18,13 @@ namespace GameCore.Core.Base.Attributes
 
         public async Task<GameObject> LoadGameObject()
         {
-            var resourceService = await GameApplication.GetService<ResourceService>();
+            var resourceService = await GameApplication.InitializeService<ResourceService>();
             return await resourceService.GetAsset<GameObject>(_id).Load();
         }
 
         public async Task UnloadGameObject()
         {
-            var resourceService = await GameApplication.GetService<ResourceService>();
+            var resourceService = await GameApplication.InitializeService<ResourceService>();
             await resourceService.GetAsset<GameObject>(_id).Unload();
         }
     }

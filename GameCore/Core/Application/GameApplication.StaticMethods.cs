@@ -37,7 +37,7 @@ namespace GameCore.Core.Application
         {
             foreach (var service in _services.Keys.ToArray())
             {
-                await DestroyService(service);
+                await DeinitializeService(service);
             }
         }
     }
