@@ -11,6 +11,7 @@ namespace GameCore.Core.Services.Resources
     public abstract class BaseResource<TInfo, TAsset>:IResource<TInfo,TAsset> where TAsset : UnityEngine.Object
     {
 
+        
         private event Action<TAsset> InternalOnLoadComplete;
         
         public TInfo Info { get; private set; }
@@ -19,6 +20,7 @@ namespace GameCore.Core.Services.Resources
         public bool IsLoaded { get; protected set; }
 
         public TAsset Asset { get; private set; }
+        public int ReferenceCount { get; private set; }
 
         private Coroutine _coroutine;
 
@@ -30,6 +32,7 @@ namespace GameCore.Core.Services.Resources
 
         public void Load(Action<TAsset> onLoad)
         {
+            ReferenceCount++;
             if (Asset != null && IsLoaded)
             {
                 onLoad.SafeInvoke(Asset);
@@ -62,22 +65,23 @@ namespace GameCore.Core.Services.Resources
             }
         }
         
-        public void Unload(Action onUnload)
+        public void Unload(Action onUnload, bool unloadDependences = false)
         {
-            OnUnload();
+            OnUnload(unloadDependences);
             StopLoading();
             Asset = null;
             IsLoaded = false;
             onUnload.SafeInvoke();
+            ReferenceCount--;
         }
 
-        public AwaitableOperation Unload()
+        public AwaitableOperation Unload(bool unloadDependences = false)
         {
-            return new AwaitableOperation(Unload);
+            return new AwaitableOperation((c)=>Unload(c,unloadDependences));
         }
         
         protected abstract IEnumerator LoadResource(Action<TAsset> onLoadComplete);
-        protected abstract void OnUnload();
+        protected abstract void OnUnload(bool unloadDependences);
 
         public static implicit operator TAsset(BaseResource<TInfo, TAsset> resource)
         {

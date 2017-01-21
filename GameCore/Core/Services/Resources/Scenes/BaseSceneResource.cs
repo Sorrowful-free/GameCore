@@ -11,65 +11,75 @@ namespace GameCore.Core.Services.Resources.Scenes
 {
     public abstract class BaseSceneResource : IBaseResource<SceneInfo>
     {
+        private event Action<Scene> InternalOnLoadComplete;
         public SceneInfo Info { get; private set; }
         public Scene Scene { get; protected set; }
         public bool IsLoaded { get; protected set; }
 
+        public int ReferenceCount { get; private set; }
+
         private Coroutine _loadCoroutine;
-        private Coroutine _unloadCoroutine;
 
         public BaseSceneResource(SceneInfo info)
         {
             Info = info;
         }
 
-        public void Load(Action onSceneLoadComplete)
+        public void Load(Action<Scene> onSceneLoadComplete)
         {
+            ReferenceCount++;
+            if (Scene != default(Scene) && IsLoaded)
+            {
+                onSceneLoadComplete.SafeInvoke(Scene);
+                return;
+            }
+
+            InternalOnLoadComplete += onSceneLoadComplete;
             if (_loadCoroutine == null)
-                _loadCoroutine = StartLoading(onSceneLoadComplete).StartAsCoroutine();
+                _loadCoroutine = LoadScene((scene) =>
+                {
+                    Scene = scene;
+                    InternalOnLoadComplete.SafeInvoke(Scene);
+                    InternalOnLoadComplete.ClearAllHandlers();
+                    IsLoaded = true;
+                    StopLoading();
+                }).StartAsCoroutine();
         }
 
-        public AwaitableOperation Load()
+        public AwaitableOperation<Scene> Load()
         {
-            return new AwaitableOperation(Load);
-        }
-        
-        protected abstract IEnumerator StartLoading(Action onSceneLoadComplete);
-
-        protected virtual void OnUnload()
-        {
-            
+            return new AwaitableOperation<Scene>(Load);
         }
 
-        public void Unload(Action onUnload)
-        {
-            if(_unloadCoroutine == null)
-                _unloadCoroutine = AsyncUnload(onUnload).StartAsCoroutine();
-        }
+        protected abstract IEnumerator LoadScene(Action<Scene> onSceneLoadComplete);
 
-        public AwaitableOperation Unload()
-        {
-            return new AwaitableOperation(Unload);
-        }
-
-        private IEnumerator AsyncUnload(Action onUnload)
+        private void StopLoading()
         {
             if (_loadCoroutine != null)
             {
                 _loadCoroutine.StopCoroutine();
                 _loadCoroutine = null;
             }
-            yield return 0;
-            SceneManager.UnloadScene(Info.Name);
-            yield return 0;
-            OnUnload();
-            onUnload.SafeInvoke();
-            if (_unloadCoroutine != null)
-            {
-                _unloadCoroutine.StopCoroutine();
-                _unloadCoroutine = null;
-            }
                 
+        }
+
+        public void Unload(Action onUnload,bool unloadDependences = false)
+        {
+            StopLoading();
+            SceneManager.UnloadScene(Info.Name);
+            OnUnload(unloadDependences);
+            onUnload.SafeInvoke();
+            ReferenceCount--;
+        }
+
+        public AwaitableOperation Unload(bool unloadDependences = false)
+        {
+            return new AwaitableOperation((c)=>Unload(c,unloadDependences));
+        }
+
+        protected virtual void OnUnload(bool unloadDependences)
+        {
+            UnityEngine.Resources.UnloadUnusedAssets();
         }
     }
 }

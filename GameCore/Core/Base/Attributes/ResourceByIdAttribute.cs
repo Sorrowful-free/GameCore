@@ -25,7 +25,7 @@ namespace GameCore.Core.Base.Attributes
         public async Task UnloadGameObject()
         {
             var resourceService = await GameApplication.InitializeService<ResourceService>();
-            await resourceService.GetAsset<GameObject>(_id).Unload();
+            await resourceService.GetAsset<GameObject>(_id).Unload(false);
         }
     }
 }

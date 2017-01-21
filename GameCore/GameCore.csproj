@@ -61,6 +61,8 @@
     <Compile Include="Core\Base\Async\AwaitableOperation.cs" />
     <Compile Include="Core\Base\Dependency\Attributes\PlatformDependencAttribute.cs" />
     <Compile Include="Core\Base\Dependency\DependencyInjectionExtention.cs" />
+    <Compile Include="Core\Base\Factory\BaseFactory.cs" />
+    <Compile Include="Core\Base\Factory\IFactoryElementAttribute.cs" />
     <Compile Include="Core\Base\GameTimer.cs" />
     <Compile Include="Core\Base\StateMachines\BaseStateMachine.cs" />
     <Compile Include="Core\Base\StateMachines\IState.cs" />
@@ -68,10 +70,14 @@
     <Compile Include="Core\Base\StateMachines\StateContainer.cs" />
     <Compile Include="Core\Base\Async\CallbackAwaiter.cs" />
     <Compile Include="Core\Base\Async\UnityAsync.cs" />
+    <Compile Include="Core\Extentions\ActionInvokationType.cs" />
     <Compile Include="Core\Extentions\TypeExtention.cs" />
     <Compile Include="Core\Logging\DefaultLogAppender.cs" />
     <Compile Include="Core\Logging\ILogAppender.cs" />
     <Compile Include="Core\Logging\MultiplyLogAppender.cs" />
+    <Compile Include="Core\Services\Event\BaseEvent.cs" />
+    <Compile Include="Core\Services\Event\EventListenerContainer.cs" />
+    <Compile Include="Core\Services\Event\EventService.cs" />
     <Compile Include="Core\Services\GameObjectPool\GameObjectPoolService.cs" />
     <Compile Include="Core\Services\GameObjectPool\PoolableGameObject.cs" />
     <Compile Include="Core\Services\GameObjectPool\PoolableGameObjectStatus.cs" />
@@ -82,6 +88,16 @@
     <Compile Include="Core\Services\Resources\Scenes\BaseSceneResource.cs" />
     <Compile Include="Core\Services\Resources\Scenes\BundleSceneResource.cs" />
     <Compile Include="Core\Services\Resources\Scenes\LocalSceneResource.cs" />
+    <Compile Include="Core\Services\Tutorial\Actions\ITutorialAction.cs" />
+    <Compile Include="Core\Services\Tutorial\Actions\ITutorialActionAttribute.cs" />
+    <Compile Include="Core\Services\Tutorial\Data\ITutorialActionData.cs" />
+    <Compile Include="Core\Services\Tutorial\Data\ITutorialConditionData.cs" />
+    <Compile Include="Core\Services\Tutorial\Data\ITutorialData.cs" />
+    <Compile Include="Core\Services\Tutorial\Data\ITutorialStepData.cs" />
+    <Compile Include="Core\Services\Tutorial\Steps\TutorialStep.cs" />
+    <Compile Include="Core\Services\Tutorial\TutorialService.cs" />
+    <Compile Include="Core\Services\Tutorial\Conditions\ITutorialConditionAttribute.cs" />
+    <Compile Include="Core\Services\Tutorial\Conditions\ITutorialCondition.cs" />
     <Compile Include="Core\Services\UI\Layers\UILayer.cs" />
     <Compile Include="Core\Base\Attributes\IGameObjectLoadAttribute.cs" />
     <Compile Include="Core\Base\Attributes\ResourceAttribute.cs" />
@@ -113,6 +129,7 @@
     <Compile Include="Core\UnityThreading\UnityThreadWorker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) $(TargetPath)\..\..\..\..\Assets\Libraries\$(TargetName).dll</PostBuildEvent>

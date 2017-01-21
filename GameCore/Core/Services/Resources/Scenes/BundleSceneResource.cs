@@ -16,7 +16,7 @@ namespace GameCore.Core.Services.Resources.Scenes
             _bundle = bundle;
         }
 
-        protected override IEnumerator StartLoading(Action onSceneLoadComplete)
+        protected override IEnumerator LoadScene(Action<Scene> onSceneLoadComplete)
         {
             _bundle.Load((assetBundle) =>
             {
@@ -25,23 +25,23 @@ namespace GameCore.Core.Services.Resources.Scenes
             yield return 0;
         }
 
-        private IEnumerator AsyncLoadScene(Action onSceneLoadingComplete)
+        private IEnumerator AsyncLoadScene(Action<Scene> onSceneLoadingComplete)
         {
             var operation = SceneManager.LoadSceneAsync(Info.Name, Info.LoadSceneMode);
             Scene = SceneManager.GetSceneByName(Info.Name);
             yield return operation;
         }
 
-        protected override void OnUnload()
+        protected override void OnUnload(bool unloadDependences)
         {
-            base.OnUnload();
-            _bundle.Unload();
+            if(unloadDependences)
+                _bundle.Unload(unloadDependences);
             if (_scenetCoroutine != null)
             {
                 _scenetCoroutine.StopCoroutine();
                 _scenetCoroutine = null;
             }
-                
+            base.OnUnload(unloadDependences);
         }
     }
 

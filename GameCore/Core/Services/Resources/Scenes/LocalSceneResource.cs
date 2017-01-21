@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using GameCore.Core.Extentions;
 using UnityEngine.SceneManagement;
 
 namespace GameCore.Core.Services.Resources.Scenes
@@ -10,11 +11,12 @@ namespace GameCore.Core.Services.Resources.Scenes
         {
         }
 
-        protected override IEnumerator StartLoading(Action callback)
+        protected override IEnumerator LoadScene(Action<Scene> callback)
         {
             var operation = SceneManager.LoadSceneAsync(Info.Name, Info.LoadSceneMode);
-            Scene = SceneManager.GetSceneByName(Info.Name);
             yield return operation;
+            Scene = SceneManager.GetSceneByName(Info.Name);
+            callback.SafeInvoke(Scene);
         }
     }
 }

@@ -18,18 +18,17 @@ namespace GameCore.Core.Services.Resources
 {
     public class ResourceService : IService
     {
-        
+        private ResourceTree _resourceTree;
+
         private Dictionary<int, IBaseResource<AssetInfo>> _assets = new Dictionary<int, IBaseResource<AssetInfo>>();
         private Dictionary<int, IBaseResource<BundleInfo>> _bundles = new Dictionary<int, IBaseResource<BundleInfo>>();
         private Dictionary<int, IBaseResource<SceneInfo>> _scenes = new Dictionary<int, IBaseResource<SceneInfo>>();
-        private ResourceTree _resourceTree;
+        
 
         public ReadOnlyCollection<int> AssetsIds { get { return _assets?.Keys?.ToList()?.AsReadOnly(); } }
         public ReadOnlyCollection<int> BundlesIds { get { return _bundles?.Keys?.ToList()?.AsReadOnly(); } }
         public ReadOnlyCollection<int> ScenesIds { get { return _scenes?.Keys?.ToList()?.AsReadOnly(); } }
-
         
-
         public async Task Initialize()
         {
             _resourceTree = new ResourceTree();
@@ -99,29 +98,29 @@ namespace GameCore.Core.Services.Resources
             return (BaseSceneResource)scene;
         }
 
-        public void DisposeAsset(int id)
+        public void UnloadAsset(int id, bool unloadDependences = false)
         {
             if (_assets.ContainsKey(id))
             {
-                _assets[id].Unload();
+                _assets[id].Unload(unloadDependences);
                 _assets.Remove(id);
             }
         }
 
-        public void DisposeBundle(int id)
+        public void UnloadBundle(int id, bool unloadDependences = false)
         {
             if (_bundles.ContainsKey(id))
             {
-                _bundles[id].Unload();
+                _bundles[id].Unload(unloadDependences);
                 _bundles.Remove(id);
             }
         }
 
-        public void DisposeScene(int id)
+        public void UnloadScene(int id, bool unloadDependences = false)
         {
             if (_scenes.ContainsKey(id))
             {
-                _scenes[id].Unload();
+                _scenes[id].Unload(unloadDependences);
                 _scenes.Remove(id);
             }
         }
@@ -182,6 +181,32 @@ namespace GameCore.Core.Services.Resources
             }
         }
 
-       
+        public async Task UnloadUnusedResources()
+        {
+            var unusedAssetsIds =
+                await UnityTask<IEnumerable<int>>.ThreadPoolFactory.StartNew(
+                    () => _assets.Where(e => e.Value.ReferenceCount <= 0).Select(e => e.Key));
+
+            foreach (var assetsId in unusedAssetsIds)
+            {
+                UnloadAsset(assetsId);
+            }
+            var unusedScenesIds =
+               await UnityTask<IEnumerable<int>>.ThreadPoolFactory.StartNew(
+                   () => _scenes.Where(e => e.Value.ReferenceCount <= 0).Select(e => e.Key));
+            foreach (var scenesId in unusedScenesIds)
+            {
+                UnloadScene(scenesId);
+            }
+            var unusedBundlesIds =
+                await UnityTask<IEnumerable<int>>.ThreadPoolFactory.StartNew(
+                    () => _bundles.Where(e => e.Value.ReferenceCount <= 0).Select(e => e.Key));
+            foreach (var bundlesId in unusedBundlesIds)
+            {
+                UnloadBundle(bundlesId);
+            }
+            UnityEngine.Resources.UnloadUnusedAssets();
+            GC.Collect();
+        }
     }
 }

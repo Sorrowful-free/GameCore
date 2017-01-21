@@ -58,7 +58,7 @@ namespace GameCore.Core.Services.UI
 
         public async Task<TView> PushView<TView>(TUILayerType layerType) where TView : BaseUIView
         {
-            var uiView = await GetViewInstance<TView>(layerType);
+            var uiView = await CreateView<TView>(layerType);
             _viewStack.Push(uiView);
             return uiView;
         }
@@ -67,7 +67,7 @@ namespace GameCore.Core.Services.UI
             where TView : BaseUIView<TViewModel>
             where TViewModel : BaseUIViewModel,new()
         {
-            var uiViewModel = await GetViewInstance<TView, TViewModel>(layerType);
+            var uiViewModel = await CreateView<TView, TViewModel>(layerType);
             _viewStack.Push(_uiMap[uiViewModel]);
             return uiViewModel;
         }
@@ -81,7 +81,7 @@ namespace GameCore.Core.Services.UI
             }
         }
 
-        public async Task<TView> GetViewInstance<TView>(TUILayerType layerType) where TView : BaseUIView
+        public async Task<TView> CreateView<TView>(TUILayerType layerType) where TView : BaseUIView
         {
             var type = typeof (TView);
             var uiView = default(BaseUIView);
@@ -97,11 +97,11 @@ namespace GameCore.Core.Services.UI
             return (TView)uiView;
         }
 
-        public async Task<TViewModel> GetViewInstance<TView, TViewModel>(TUILayerType layerType)
+        public async Task<TViewModel> CreateView<TView, TViewModel>(TUILayerType layerType)
             where TView : BaseUIView<TViewModel>
             where TViewModel : BaseUIViewModel,new()
         {
-            var uiView = await GetViewInstance<TView>(layerType);
+            var uiView = await CreateView<TView>(layerType);
             var uiViewModel = TryGerOrAddViewModel<TViewModel>();
             _uiMap.Add(uiViewModel,uiView);
             await uiView.Initialize(uiViewModel);

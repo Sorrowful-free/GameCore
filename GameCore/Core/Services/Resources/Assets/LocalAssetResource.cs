@@ -10,12 +10,13 @@ namespace GameCore.Core.Services.Resources.Assets
         {
         }
 
-        protected override void OnUnload()
+        protected override void OnUnload(bool unloadDependences)
         {
             if (IsLoaded)
             {
                 UnityEngine.Resources.UnloadAsset(Asset);
             }
+            UnityEngine.Resources.UnloadUnusedAssets();
         }
 
         protected override IEnumerator LoadResource(Action<TAsset> onLoadComplete)

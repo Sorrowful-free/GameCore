@@ -31,9 +31,11 @@ namespace GameCore.Core.Services.Resources.Assets
             onLoadComplete((TAsset)assetOperation.asset);
         }
 
-        protected override void OnUnload()
+        protected override void OnUnload(bool unloadDependences)
         {
-            _bundle.Unload();
+            if(unloadDependences)
+                _bundle.Unload(unloadDependences);
+            UnityEngine.Resources.UnloadUnusedAssets();
         }
     }
 }

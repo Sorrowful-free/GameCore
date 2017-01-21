@@ -18,7 +18,7 @@ namespace GameCore.Core.Services.UI.ViewModel
                 if (!_value.Equals(value))
                 {
                     _value = value;
-                    OnChange.SafeInvoke(_value);
+                    OnChange.SafeInvoke(_value, ActionInvokationType.MainThread);
                 }
             }
         }
@@ -28,7 +28,7 @@ namespace GameCore.Core.Services.UI.ViewModel
             if (onChange != null)
             {
                 OnChange += onChange;
-                onChange.SafeInvoke(_value); // специально при бинде применить сразу
+                onChange.SafeInvoke(_value, ActionInvokationType.MainThread); // специально при бинде применить сразу
             }
         }
 
@@ -78,6 +78,11 @@ namespace GameCore.Core.Services.UI.ViewModel
             {
                 change-= OnChangeHandler;
             }
+        }
+
+        public void ClearBindings()
+        {
+            OnChange.ClearAllHandlers();
         }
 
         private void OnChangeHandler(TType value)

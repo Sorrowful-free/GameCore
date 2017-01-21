@@ -1,4 +1,5 @@
 ﻿using System;
+using GameCore.Core.Extentions;
 using UnityEngine.Events;
 
 namespace GameCore.Core.Services.UI.ViewModel
@@ -29,6 +30,11 @@ namespace GameCore.Core.Services.UI.ViewModel
         public void UnBind(UnityEvent onInvokeCommand)
         {
             onInvokeCommand.RemoveListener(InvokeCommand);
+        }
+
+        public void ClearBindings()
+        {
+            _command.ClearAllHandlers();
         }
 
         private void InvokeCommand()
@@ -63,6 +69,11 @@ namespace GameCore.Core.Services.UI.ViewModel
         public void UnBind(UnityEvent<TType> onInvokeCommand)
         {
             onInvokeCommand.RemoveListener(InvokeCommand);
+        }
+
+        public void ClearBindings()
+        {
+            _command.ClearAllHandlers();
         }
 
         private void InvokeCommand(TType value)

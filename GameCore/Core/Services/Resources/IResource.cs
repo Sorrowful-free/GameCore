@@ -8,9 +8,9 @@ namespace GameCore.Core.Services.Resources
     {
         TInfo Info { get; }
         bool IsLoaded { get; }
-
-        void Unload(Action onUnload);
-        AwaitableOperation Unload();
+        int ReferenceCount { get; }
+        void Unload(Action onUnload,bool unloadDependences = false);
+        AwaitableOperation Unload(bool unloadDependences = false);
     }
     public interface IResource<TInfo, TAsset>:IBaseResource<TInfo> 
         where TAsset :Object
@@ -20,7 +20,5 @@ namespace GameCore.Core.Services.Resources
         string Path { get; }
         void Load(Action<TAsset> onLoad);
         AwaitableOperation<TAsset> Load();
-
-
     }
 }

@@ -2,12 +2,11 @@
 using System.Collections;
 using System.Threading.Tasks;
 using GameCore.Core.Base.Async;
-using GameCore.Core.Base.Attributes;
 using GameCore.Core.Extentions;
 using GameCore.Core.UnityThreading;
 using UnityEngine;
 
-namespace GameCore.Core.Services.UI
+namespace GameCore.Core.Base.Attributes
 {
     public class ResourceAttribute : Attribute,IGameObjectLoadAttribute
     {
@@ -20,7 +19,8 @@ namespace GameCore.Core.Services.UI
 
         public async Task<GameObject> LoadGameObject()
         {
-            return await new AwaitableOperation<GameObject>(AsyncLoad);
+            _asset = await new AwaitableOperation<GameObject>(AsyncLoad);
+            return _asset;
         }
 
         private void AsyncLoad(Action<GameObject> callback)

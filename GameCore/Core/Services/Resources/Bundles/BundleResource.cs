@@ -21,13 +21,14 @@ namespace GameCore.Core.Services.Resources.Bundles
             onLoadComplete(_www.assetBundle);
         }
 
-        protected override void OnUnload()
+        protected override void OnUnload(bool unloadDependences)
         {
             if (IsLoaded)
             {
-                Asset.Unload(true);
+                Asset.Unload(unloadDependences);
                 _www.Dispose();
             }
+            UnityEngine.Resources.UnloadUnusedAssets();
         }
     }
 }

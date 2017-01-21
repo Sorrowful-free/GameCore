@@ -18,7 +18,7 @@ namespace GameCore.Core.Services.UI.View
             }
         }
 
-        public async Task Deinitialize()
+        public virtual async Task Deinitialize()
         {
             await OnDeinitialize();
         }
@@ -36,7 +36,13 @@ namespace GameCore.Core.Services.UI.View
             ViewModel.Visible.Bind((visible) => Visible = visible);
             await OnInitialize();
         }
-        
+
+        public sealed override Task Deinitialize()
+        {
+            ViewModel.Visible.ClearBindings();
+            return base.Deinitialize();
+        }
+
         protected abstract Task OnInitialize();
 
        
