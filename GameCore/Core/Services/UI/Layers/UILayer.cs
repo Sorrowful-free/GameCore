@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using GameCore.Core.Services.UI.View;
+using UnityEngine.UI;
 
 namespace GameCore.Core.Services.UI.Layers
 {
@@ -7,6 +8,19 @@ namespace GameCore.Core.Services.UI.Layers
     public class UILayer : BaseUIBehaviour
     {
         private List<BaseUIView> _views = new List<BaseUIView>();
+
+        private CanvasScaler _canvasScaler;
+
+        public CanvasScaler CanvasScaler
+        {
+            get
+            {
+                if (_canvasScaler == null)
+                    _canvasScaler = GetComponent<CanvasScaler>();
+                return _canvasScaler;
+            }
+        }
+
         public bool ContainChild(BaseUIView view)
         {
             return _views.Contains(view);

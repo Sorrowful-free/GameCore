@@ -9,6 +9,7 @@ using GameCore.Core.Base.Attributes;
 using GameCore.Core.Extentions;
 using GameCore.Core.Logging;
 using GameCore.Core.Services.UI.Layers;
+using GameCore.Core.Services.UI.Utils;
 using GameCore.Core.Services.UI.View;
 using GameCore.Core.Services.UI.ViewModel;
 using GameCore.Core.UnityThreading;
@@ -23,6 +24,47 @@ namespace GameCore.Core.Services.UI
         public abstract Task Initialize();
 
         public abstract Task Deinitialize();
+
+        [SerializeField, Tooltip("in inches")]
+        private float _minScreenDiagonal;
+        [SerializeField]
+        private Vector2 _minScreenResolution;
+        [SerializeField, Tooltip("in inches")]
+        private float _maxScreenDiagonal;
+        [SerializeField]
+        private Vector2 _maxScreenResolution;
+        [SerializeField, Tooltip("x axis = screen diagonal \n y axis = scale factor")]
+        private AnimationCurve _scaleFactor;
+
+        [Header("Debug"), SerializeField, Tooltip("set diagonal only in editor"), Range(0, 15)]
+        private float _screenDiagonal;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            if (!UnityEngine.Application.isEditor)
+                Recalculate(UIUtils.GetPhysicalScreenDiagonal());
+            else
+                Recalculate(_screenDiagonal);
+        }
+
+        private void OnValidate()
+        {
+            if (UnityEngine.Application.isEditor)
+                Recalculate(_screenDiagonal);
+        }
+
+        private void Recalculate(float screenDiagonal)
+        {
+            screenDiagonal = Mathf.Clamp(screenDiagonal, _minScreenDiagonal, _maxScreenDiagonal);
+            var normalizedScreenDiagonal = (screenDiagonal - _minScreenDiagonal) / (_maxScreenDiagonal - _minScreenDiagonal);
+            var scaleFactor = _scaleFactor.Evaluate(normalizedScreenDiagonal);
+            var currentCanvasScalerResolutin = _minScreenResolution + (_maxScreenResolution - _minScreenResolution) * scaleFactor;
+            foreach (var layer in LayerInfos)
+            {
+                layer.Layer.CanvasScaler.referenceResolution = currentCanvasScalerResolutin;
+            }
+        }
     }
     public abstract class BaseUIService<TUILayerType> :BaseUIService
         where TUILayerType : struct

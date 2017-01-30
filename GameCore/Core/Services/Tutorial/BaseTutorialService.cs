@@ -1,18 +1,23 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using GameCore.Core.Application.Interfaces.Services;
+using GameCore.Core.Base.Async;
 using GameCore.Core.Base.Factory;
+using GameCore.Core.Extentions;
 using GameCore.Core.Services.Tutorial.Actions;
 using GameCore.Core.Services.Tutorial.Conditions;
 using GameCore.Core.Services.Tutorial.Data;
 using GameCore.Core.Services.Tutorial.Steps;
+using GameCore.Core.Services.Tutorial.Steps.Data;
 using GameCore.Core.UnityThreading;
 
 namespace GameCore.Core.Services.Tutorial
 {
-    public class TutorialService<TConditionType, TActionType> : IService
+    public class BaseTutorialService<TConditionType, TActionType> : IService
         where TConditionType : struct
         where TActionType : struct
     {
@@ -33,32 +38,28 @@ namespace GameCore.Core.Services.Tutorial
                     var conditions =
                         stepData.Conditions.Select(e => _conditionsFactory.CreateInstance(e.ConditionType, e));
                     var actions = stepData.Actions.Select(e => _actionFactory.CreateInstance(e.ActionType, e));
-                    _tutorialSteps.Enqueue(new TutorialStep(conditions, actions));
+                    _tutorialSteps.Enqueue(new TutorialStep(conditions, actions, stepData.WaitingType));
                 }
             });
+            NextStep();
         }
 
-        public async Task SkipStep()
+        public void SkipStep()
         {
-            await Task.WhenAll(_tutorialSteps.Peek().Actions.Select(e => e.Run()));
-            _tutorialSteps.Dequeue();
+            _tutorialSteps.Peek().SkipStep();
         }
 
-        public async Task SkipTutorial()
+        public void SkipTutorial()
         {
-            while (_tutorialSteps.Count > 0)
-            {
-                await Task.WhenAll(_tutorialSteps.Dequeue().Conditions.Select(e => e.Wait()));
-            }
-        }
-
-        private async Task NextStep(bool isFirstStep = false)
-        {
-            if (!isFirstStep)
-            {
-                await Task.WhenAll(_tutorialSteps.Peek().Conditions.Select(e => e.Wait()));
-            }
             SkipStep();
+            _tutorialSteps.Clear();
+        }
+
+        private async Task NextStep()
+        {
+            await _tutorialSteps.Dequeue().ProcessStep();
+            if(_tutorialSteps.Count > 0)
+                await NextStep();
         }
 
         public async Task Deinitialize()

@@ -95,12 +95,16 @@
     <Compile Include="Core\Services\Tutorial\Data\ITutorialData.cs" />
     <Compile Include="Core\Services\Tutorial\Data\ITutorialStepData.cs" />
     <Compile Include="Core\Services\Tutorial\Steps\TutorialStep.cs" />
-    <Compile Include="Core\Services\Tutorial\TutorialService.cs" />
+    <Compile Include="Core\Services\Tutorial\BaseTutorialService.cs" />
     <Compile Include="Core\Services\Tutorial\Conditions\ITutorialConditionAttribute.cs" />
     <Compile Include="Core\Services\Tutorial\Conditions\ITutorialCondition.cs" />
     <Compile Include="Core\Services\UI\Layers\UILayer.cs" />
     <Compile Include="Core\Base\Attributes\IGameObjectLoadAttribute.cs" />
     <Compile Include="Core\Base\Attributes\ResourceAttribute.cs" />
+    <Compile Include="Core\Services\UI\Utils\UIUtils.cs" />
+    <Compile Include="Core\Services\UI\ViewModel\BindingList.cs" />
+    <Compile Include="Core\Services\UI\View\BaseUIItemRenderer.cs" />
+    <Compile Include="Core\Services\UI\View\BaseUIListView.cs" />
     <Compile Include="Core\Services\UI\View\BaseUIBehaviour.cs" />
     <Compile Include="Core\Services\UI\View\BaseUIView.cs" />
     <Compile Include="Core\Services\UI\ViewModel\BaseUIViewModel.cs" />
