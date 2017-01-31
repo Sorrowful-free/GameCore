@@ -85,6 +85,9 @@
     <Compile Include="Core\Services\GameState\GameStateService.cs" />
     <Compile Include="Core\Services\GameState\IGameState.cs" />
     <Compile Include="Core\Base\Attributes\ResourceByIdAttribute.cs" />
+    <Compile Include="Core\Services\Resources\Bundles\EditorBundleLoader.cs" />
+    <Compile Include="Core\Services\Resources\Bundles\IBundleLoader.cs" />
+    <Compile Include="Core\Services\Resources\Bundles\WWWBundleLoader.cs" />
     <Compile Include="Core\Services\Resources\Scenes\BaseSceneResource.cs" />
     <Compile Include="Core\Services\Resources\Scenes\BundleSceneResource.cs" />
     <Compile Include="Core\Services\Resources\Scenes\LocalSceneResource.cs" />
