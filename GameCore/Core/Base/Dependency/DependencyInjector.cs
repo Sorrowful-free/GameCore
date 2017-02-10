@@ -8,18 +8,18 @@ namespace GameCore.Core.Base.Dependency
 {
     public static class DependencyInjector
     {
-        public static TDependency GetDependency<TDependency>()
+        public static TDependency GetDependency<TDependency>(params object[] ctorParams)
         {
             var type = typeof(TDependency);
             var implementedType = GetDependencyType(type);
-            var dependency = (TDependency)Activator.CreateInstance(implementedType);
+            var dependency = (TDependency)Activator.CreateInstance(implementedType, ctorParams);
             return dependency;
         }
 
-        public static TBaseDependency GetDependency<TBaseDependency>(Type type)
+        public static TBaseDependency GetDependency<TBaseDependency>(Type type, params object[] ctorParams)
         {
             var implementedType = GetDependencyType(type);
-            var dependency = (TBaseDependency)Activator.CreateInstance(implementedType);
+            var dependency = (TBaseDependency)Activator.CreateInstance(implementedType, ctorParams);
             return dependency;
         }
 
@@ -58,7 +58,7 @@ namespace GameCore.Core.Base.Dependency
                 .SelectMany(e => e.GetTypes())
                 .FirstOrDefault(t => interfaceType.IsAssignableFrom(t)
                                      && !t.IsInterface
-                                     && CheckPlatformDependency(t));
+                                     && CheckDependency(t));
             if (type == null)
             {
                 throw new AggregateException($"not found dependence for type {interfaceType.Name}");
@@ -66,14 +66,19 @@ namespace GameCore.Core.Base.Dependency
             return type;
         }
 
-        private static bool CheckPlatformDependency(Type type)
+        private static bool CheckDependency(Type type)
         {
-            var attribute = type.GetAttribute<PlatformDependencAttribute>();
-            if (attribute != null)
+            var attributes = type.GetAttributesByInterface<IDependencyAttribute>();
+
+            if (UnityEngine.Application.isEditor)
             {
-                return attribute.Platform == UnityEngine.Application.platform;
+                return attributes.Any(e => e is EditorDependencyAttribute);
             }
-            return true;
+            var attribute = attributes.FirstOrDefault(e => e is PlatformDependencAttribute || e is RuntimeDependencyAttribute);
+            if (attribute != null)
+                return attribute.IsCanCreate;
+
+            return false;
         }
     }
 }

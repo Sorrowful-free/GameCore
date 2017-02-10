@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace GameCore.Core.Services.Resources
@@ -12,6 +13,13 @@ namespace GameCore.Core.Services.Resources
         private Dictionary<int, AssetInfo> _assets;
         private Dictionary<int, BundleInfo> _bundles;
         private Dictionary<int, SceneInfo> _scenes;
+
+        public bool IsNeedDownload => _bundles.Values.Any(e=>e.Version > 0 && Caching.IsVersionCached(GetBundlePath(e.Id),e.Version));
+
+        public List<int> NeedLoadBundlesIds
+            =>
+                _bundles.Values.Where(e => e.Version > 0 && Caching.IsVersionCached(GetBundlePath(e.Id), e.Version)).Select(e=>e.Id)
+                    .ToList();
 
         public void InitializeResourceData(ResourcesInfo resourceInfo)
         {
