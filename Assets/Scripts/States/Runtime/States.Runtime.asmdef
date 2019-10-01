@@ -1,0 +1,16 @@
+{
+    "name": "States.Runtime",
+    "references": [
+        "GUID:ea6752e3c157b47e7ab10005628f33bd",
+        "GUID:73996d379d28e49709de359776e68c1c"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}

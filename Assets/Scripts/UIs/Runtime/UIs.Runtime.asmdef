@@ -1,0 +1,17 @@
+{
+    "name": "UIs.Runtime",
+    "references": [
+        "GUID:ea6752e3c157b47e7ab10005628f33bd",
+        "GUID:bfc34fa97be7641008f4fd0dea78f781",
+        "GUID:a835743d2f1d04279824f7e66d141133"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}

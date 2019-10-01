@@ -6,5 +6,11 @@
 *.xap
 *.ipa
 *.bar
-**/build
+**/[Bb]uild
+**/[Bb]uilds
 **/bin
+*.csproj
+*.sln
+**/.vs
+**/storage.ide
+**/.idea

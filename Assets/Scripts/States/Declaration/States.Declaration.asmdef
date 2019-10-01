@@ -1,0 +1,15 @@
+{
+    "name": "States.Declaration",
+    "references": [
+        "GUID:ea6752e3c157b47e7ab10005628f33bd"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": []
+}
